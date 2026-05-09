@@ -56,10 +56,10 @@ const landingPageHTML = `
                 Nexus<span class="text-gray-500">.</span>
             </div>
             <div class="hidden md:flex gap-8 text-[10px] font-bold tracking-widest uppercase text-gray-400">
-                <a href="#solutions" class="hover:text-white transition">Solutions</a>
-                <a href="#infrastructure" class="hover:text-white transition">Infrastructure</a>
-                <a href="#compliance" class="hover:text-white transition">Compliance</a>
-                <a href="#contact" class="hover:text-white transition">Contact</a>
+                <a href="#solutions" class="hover:text-white transition">Platform</a>
+                <a href="#infrastructure" class="hover:text-white transition">Network</a>
+                <a href="#certifications" class="hover:text-white transition">Security</a>
+                <a href="#contact" class="hover:text-white transition">About</a>
             </div>
             <button class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-gray-200 transition">Client Login</button>
         </div>
@@ -71,18 +71,18 @@ const landingPageHTML = `
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none"></div>
         
         <div class="text-center z-10 w-full max-w-2xl mx-auto relative">
-            <span class="text-[10px] font-bold tracking-widest uppercase text-indigo-400 border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 rounded-full mb-6 inline-block">Enterprise Data Registry V4.2</span>
-            <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-4">Secure <span class="font-bold text-white">Assets</span></h1>
-            <p class="text-gray-400 text-sm md:text-base tracking-wide mb-10 leading-relaxed">Search our global registry of digital projects, infrastructure documentation, and cloud services.</p>
+            <span class="text-[10px] font-bold tracking-widest uppercase text-indigo-400 border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 rounded-full mb-6 inline-block">Enterprise Data Vault V4.5</span>
+            <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-4">Secure <span class="font-bold text-white">Identity</span></h1>
+            <p class="text-gray-400 text-sm md:text-base tracking-wide mb-10 leading-relaxed">Access your centralized corporate resources, private endpoints, and infrastructure documentation via our zero-trust tunnel.</p>
             
             <form id="search-form" class="w-full flex items-center p-1.5 border border-white/10 bg-[#0a0a0a] focus-within:border-indigo-500/50 transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)] relative z-20">
                 <div class="pl-4 flex items-center justify-center pointer-events-none">
                     <svg id="search-icon" class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <input type="text" id="main-search" placeholder="Search by project ID, service or keyword..." autocomplete="off" spellcheck="false"
+                <input type="text" id="main-search" placeholder="Enter Secure Identity PIN or Access Token..." autocomplete="off" spellcheck="false"
                     class="w-full bg-transparent text-white text-sm px-4 py-3 placeholder-gray-600 tracking-wide font-medium">
                 <button type="submit" id="search-btn" class="px-6 py-3 bg-white hover:bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest transition flex items-center justify-center min-w-[100px]">
-                    <span id="btn-text">Lookup</span><div id="search-spinner" class="loader hidden"></div>
+                    <span id="btn-text">Authenticate</span><div id="search-spinner" class="loader hidden"></div>
                 </button>
             </form>
             <p id="search-msg" class="text-[10px] font-bold text-gray-500 mt-4 tracking-widest uppercase opacity-0 transition-opacity h-4"></p>
@@ -91,30 +91,161 @@ const landingPageHTML = `
 
     <!-- Trusted Brands Banner -->
     <div class="py-8 bg-[#020202] border-b border-white/5 text-center">
-        <p class="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-6 font-bold">Trusted by Global Technology Leaders</p>
+        <p class="text-[9px] uppercase tracking-[0.2em] text-gray-600 mb-6 font-bold">Securing Infrastructure For Industry Leaders</p>
         <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale pointer-events-none select-none">
-            <span class="text-xl font-black tracking-tighter">AcmeCorp</span>
-            <span class="text-lg font-bold tracking-widest">GLOBEX</span>
-            <span class="text-xl font-light tracking-wide border-2 border-current px-2">SOYLENT</span>
-            <span class="text-lg font-serif italic font-bold">Initech</span>
-            <span class="text-xl font-bold uppercase tracking-widest flex items-center gap-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg> Apex</span>
+            <span class="text-xl font-black tracking-tighter">CipherTech</span>
+            <span class="text-lg font-bold tracking-widest">NOVA NETWORKS</span>
+            <span class="text-xl font-light tracking-wide border-2 border-current px-2">ORBITAL</span>
+            <span class="text-lg font-serif italic font-bold">FinSecure Group</span>
+            <span class="text-xl font-bold uppercase tracking-widest flex items-center gap-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/></svg> Apex Node</span>
         </div>
     </div>
 
     <!-- Quick Stats -->
     <div class="w-full border-b border-white/5 bg-[#080808]">
         <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-6 text-center">
-            <div><p class="text-3xl font-bold text-white mb-1">99.99%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Uptime SLA</p></div>
-            <div><p class="text-3xl font-bold text-white mb-1">200+</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Edge Datacenters</p></div>
-            <div><p class="text-3xl font-bold text-white mb-1">&lt;12ms</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Global Latency</p></div>
-            <div><p class="text-3xl font-bold text-white mb-1">AES-GCM</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">256-bit Encrypted</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">99.99%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Uptime SLA guaranteed</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">250+</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Global Edge Nodes</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">&lt;10ms</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Network Latency</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">AES-256</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">End-to-End Encryption</p></div>
         </div>
     </div>
 
+    <!-- Features Section -->
+    <section id="solutions" class="py-24 bg-[#050505] border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-indigo-500 text-[10px] font-bold uppercase tracking-widest mb-2 block">Platform Capabilities</span>
+                <h2 class="text-3xl md:text-4xl font-light text-white">Next-Generation <span class="font-bold">Zero Trust Architecture</span></h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="feature-box p-8">
+                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Data Sovereignty & Isolation</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Total compliance with localized data storage. Our framework guarantees physically isolated instances across 45+ highly secure geographic regions.</p>
+                </div>
+                <div class="feature-box p-8">
+                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Military-Grade Tunneling</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Built from the ground up with robust encryption. Every incoming request is authenticated, sanitized, and logged before touching the internal network.</p>
+                </div>
+                <div class="feature-box p-8">
+                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Dynamic Edge Routing</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">We leverage edge computing nodes to bring your endpoints closer to your workforce, mitigating DDoS vectors while ensuring minimal latency globally.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Infrastructure Info -->
+    <section id="infrastructure" class="py-24 bg-[#080808] relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-1/2 h-full opacity-10 flex items-center justify-center pointer-events-none">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full scale-150 transform translate-x-1/4">
+                <path fill="#4f46e5" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.3,-46.3C90.8,-33.5,96.8,-18.1,95.5,-3.2C94.2,11.7,85.6,26.1,75.4,38.1C65.2,50.1,53.4,59.7,40.1,67.6C26.8,75.5,12.1,81.7,-2.8,86.5C-17.7,91.3,-35.4,85.1,-48.5,75.4C-61.6,65.7,-70.1,52.5,-77.8,38.4C-85.5,24.3,-92.4,9.3,-92.1,-5.6C-91.8,-20.5,-84.3,-35.3,-74.1,-47.1C-63.9,-58.9,-51,-67.7,-37.2,-74.8C-23.4,-81.9,-8.7,-87.3,3.3,-92.7C15.3,-98.1,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
+            </svg>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-light text-white mb-6">Designed for <span class="font-bold">Scale.</span></h2>
+                <p class="text-gray-400 text-sm leading-relaxed mb-8">Nexus powers top-tier financial platforms, health registries, and corporate agencies. Our backbone network routes over 50 Tbps of encrypted traffic daily without a single drop.</p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 border-b border-white/5 pb-4">
+                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">01</span></div>
+                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">DDoS Mitigation</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Automated L3/L4/L7 Protection</p></div>
+                    </div>
+                    <div class="flex items-center gap-4 border-b border-white/5 pb-4">
+                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">02</span></div>
+                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">Auto-Scaling Nodes</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Kubernetes Managed Clusters</p></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">03</span></div>
+                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">Disaster Recovery</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Multi-AZ Data Redundancy</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-full max-w-md p-6 border border-white/10 bg-black/50 backdrop-blur-sm">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                        <span class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Global Relay Status</span>
+                        <span class="flex items-center gap-2 text-[10px] text-green-400 font-bold uppercase tracking-widest"><div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> All Systems Operational</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-xs"><span class="text-gray-500">US-East (Virginia)</span><span class="text-white">12ms</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-gray-500">EU-Central (Frankfurt)</span><span class="text-white">15ms</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-gray-500">AP-Southeast (Singapore)</span><span class="text-white">18ms</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-gray-500">SA-East (São Paulo)</span><span class="text-white">22ms</span></div>
+                        <div class="flex justify-between text-xs pt-2 border-t border-white/5"><span class="text-indigo-400">Total Active Sessions</span><span class="text-white">142,893</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certification & Compliance -->
+    <section id="certifications" class="py-16 bg-[#020202] border-t border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-8">Audited & Certified Security Standards</h3>
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">SOC 2 TYPE II</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">ISO 27001</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">GDPR COMPLIANT</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">HIPAA READY</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Massive Footer -->
-    <footer id="contact" class="pt-24 pb-10 px-6 bg-[#030303] border-t border-white/5">
+    <footer id="contact" class="pt-24 pb-10 px-6 bg-[#030303]">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/5 pb-16 mb-8">
+            <div class="md:col-span-2">
+                <div class="text-xl font-bold tracking-widest uppercase mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    Nexus<span class="text-gray-500">.</span>
+                </div>
+                <p class="text-gray-500 text-xs leading-relaxed max-w-sm mb-6">Nexus provides secure, enterprise-grade data management and registry services for global organizations. Ensuring absolute privacy, untraceable endpoints, and scale.</p>
+            </div>
+            <div>
+                <h4 class="text-white text-[10px] font-bold uppercase tracking-widest mb-6">Organization</h4>
+                <ul class="space-y-3 text-xs text-gray-500">
+                    <li><a href="#" class="hover:text-indigo-400 transition">About Framework</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Engineering Blog</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Media & Press</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Enterprise Sales</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white text-[10px] font-bold uppercase tracking-widest mb-6">Legal & Policy</h4>
+                <ul class="space-y-3 text-xs text-gray-500">
+                    <li><a href="#" class="hover:text-indigo-400 transition">Strict Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Data Processing Addendum</a></li>
+                    <li><a href="#" class="hover:text-indigo-400 transition">Security Disclosure</a></li>
+                </ul>
+            </div>
+        </div>
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 Nexus Digital Enterprise. All rights reserved.</p>
+            <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 Nexus Digital Enterprise Security. All rights reserved.</p>
+            <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -141,7 +272,7 @@ const landingPageHTML = `
                         document.getElementById('main-search').disabled = false;
                         document.getElementById('main-search').value = '';
                         document.getElementById('search-msg').style.color = '#ef4444'; 
-                        document.getElementById('search-msg').innerText = 'NO RESULTS FOUND FOR "' + q.toUpperCase() + '"';
+                        document.getElementById('search-msg').innerText = 'ACCESS DENIED: NO NODE FOUND';
                         document.getElementById('search-msg').style.opacity = '1';
                     }, 1000);
                 }
@@ -286,11 +417,12 @@ export default {
 
         if (path === "/api/access" && request.method === "POST") {
             const { code } = await request.json();
+            // Removed Secure flag strictly, using Lax and Max-Age to fix login across different networks/browsers
             if (db.adminPin && db.adminPin !== "SET_YOUR_PIN_HERE" && code === String(db.adminPin)) {
-                return new Response(JSON.stringify({ success: true, role: 'admin' }), { headers: { "Set-Cookie": `admin_session=${CONFIG.SESSION_SECRET}; HttpOnly; Secure; Path=/` } });
+                return new Response(JSON.stringify({ success: true, role: 'admin' }), { headers: { "Set-Cookie": `admin_session=${CONFIG.SESSION_SECRET}; HttpOnly; Path=/; Max-Age=864000; SameSite=Lax` } });
             }
             if (db.pins && db.pins[code]) {
-                return new Response(JSON.stringify({ success: true, role: 'user' }), { headers: { "Set-Cookie": `portal_session=${code}; HttpOnly; Secure; Path=/` } });
+                return new Response(JSON.stringify({ success: true, role: 'user' }), { headers: { "Set-Cookie": `portal_session=${code}; HttpOnly; Path=/; Max-Age=864000; SameSite=Lax` } });
             }
             return new Response("Invalid", { status: 401 });
         }
@@ -479,8 +611,8 @@ export default {
                 
                 <header class="sticky top-0 z-40 flex justify-between items-center border-b border-white/10 bg-[#0a0a0a] p-4 md:p-6 shadow-md w-full">
                     <div>
-                        <h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-indigo-400">Welcome <span class="text-white">${userData.name || userPin}</span></h1>
-                        <p class="text-[9px] text-gray-500 mt-0.5 uppercase tracking-[0.2em]">Secure Access Identity</p>
+                        <h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-indigo-400">ID: <span class="text-white">${userPin}</span></h1>
+                        <p class="text-[9px] text-gray-500 mt-0.5 uppercase tracking-[0.2em]">Secure Access Node</p>
                     </div>
                     <a href="/logout" class="px-5 py-2.5 bg-red-900/20 text-[10px] font-bold tracking-widest uppercase border border-red-900/50 text-red-500 hover:bg-red-600 hover:text-white transition">Terminate</a>
                 </header>
@@ -556,7 +688,7 @@ export default {
 
             return new Response("Starting...", {
                 status: 302,
-                headers: { "Location": "/", "Set-Cookie": `proxy_active=${encryptedData}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=Lax` }
+                headers: { "Location": "/", "Set-Cookie": `proxy_active=${encryptedData}; HttpOnly; Path=/; Max-Age=3600; SameSite=Lax` }
             });
         }
         if (path === "/api/stop-proxy") return new Response("Stopped", { status: 302, headers: { "Location": "/", "Set-Cookie": "proxy_active=; Max-Age=0; Path=/" } });
@@ -610,7 +742,6 @@ export default {
             const proxyRes = await fetch(targetUrl.toString(), fetchConfig);
             const responseHeaders = new Headers();
             
-            // 🚀 SECURITY BYPASS: Remove CSP, X-Frame, & Restrictive headers to fix broken assets
             const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security'];
             
             for (const [key, value] of proxyRes.headers.entries()) {
@@ -626,21 +757,18 @@ export default {
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
 
-            responseHeaders.append("Set-Cookie", `proxy_active=${isProxyActive}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=Lax`);
+            responseHeaders.append("Set-Cookie", `proxy_active=${isProxyActive}; HttpOnly; Path=/; Max-Age=3600; SameSite=Lax`);
 
             let body = proxyRes.body;
             const contentType = responseHeaders.get("Content-Type") || "";
             
-            // 🚀 ADVANCED REWRITE: Fix CSS, JS, HTML missing assets by rewriting deep URLs
             if (contentType.includes("text/") || contentType.includes("application/json") || contentType.includes("application/javascript")) {
                 try {
                     let textBody = await proxyRes.text();
                     let tHost = tDomainObj.host;
                     let pHost = url.host;
 
-                    // 1. Rewrite full domain structure
                     textBody = textBody.split(targetDomain).join(url.origin);
-                    // 2. Rewrite base hostname to catch //cdn... or relative mismatches
                     textBody = textBody.split(tHost).join(pHost);
                     
                     if (contentType.includes("text/html")) {
@@ -843,15 +971,15 @@ export default {
             overlay.appendChild(popup);
             document.body.appendChild(overlay);
 
-            let hasFilled = false;
-            let rejected = false;
             let lastFocusedInput = null;
 
             document.getElementById('nx-btn-no').onclick = (e) => {
                 e.preventDefault();
                 overlay.style.display = 'none';
-                rejected = true;
-                if(lastFocusedInput) { setTimeout(() => lastFocusedInput.focus(), 100); }
+                if(lastFocusedInput) { 
+                    lastFocusedInput.dataset.nxIgnored = "true";
+                    setTimeout(() => lastFocusedInput.focus(), 100); 
+                }
             };
 
             document.getElementById('nx-btn-yes').onclick = (e) => {
@@ -879,14 +1007,15 @@ export default {
                      });
                 }
 
-                if(uField) setNativeValue(uField, au);
-                if(pField) setNativeValue(pField, ap);
-                hasFilled = true;
+                if(uField) { setNativeValue(uField, au); uField.dataset.nxFilled = "true"; }
+                if(pField) { setNativeValue(pField, ap); pField.dataset.nxFilled = "true"; }
+                if(lastFocusedInput) lastFocusedInput.dataset.nxFilled = "true";
             };
 
             const checkTrigger = (e) => {
-                if (hasFilled || rejected) return;
                 if (e.target.tagName === 'INPUT') {
+                    if (e.target.dataset.nxIgnored || e.target.dataset.nxFilled) return;
+
                     let n = (e.target.name||'').toLowerCase();
                     let p = (e.target.placeholder||'').toLowerCase();
                     if (e.target.classList.contains('nx-mask') || e.target.type === 'password' || n.includes('user') || p.includes('user') || n.includes('login')) {
