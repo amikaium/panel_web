@@ -151,6 +151,33 @@ const landingPageHTML = `
 // ==========================================
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
+
+// ✅ GLOBAL HEADER CLEANER (Fixes CSS & JS loading issues by removing gzip conflicts)
+const cleanHeaders = (proxyRes, reqOrigin = null) => {
+    const responseHeaders = new Headers();
+    const removeHeaders =[
+        'content-security-policy', 'content-security-policy-report-only', 
+        'x-frame-options', 'strict-transport-security', 'x-content-type-options',
+        'content-encoding', 'content-length', 'transfer-encoding', 'access-control-allow-origin'
+    ];
+    for (const [key, value] of proxyRes.headers.entries()) {
+        const kLower = key.toLowerCase();
+        if (kLower === 'set-cookie') {
+            let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
+            modCookie = modCookie.replace(/SameSite=(Strict|None)/gi, 'SameSite=Lax'); // Ensure cookies work in proxy
+            responseHeaders.append('Set-Cookie', modCookie);
+        } else if (!removeHeaders.includes(kLower)) {
+            responseHeaders.append(key, value);
+        }
+    }
+    if (reqOrigin) {
+        responseHeaders.set("Access-Control-Allow-Origin", reqOrigin);
+        responseHeaders.set("Access-Control-Allow-Credentials", "true");
+        responseHeaders.set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Date, Server, Authorization, sid, Token"); 
+    }
+    return responseHeaders;
+};
+
 export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
@@ -222,7 +249,7 @@ export default {
             const proxyHeaders = new Headers(request.headers);
             
             let originSpoof = tObj.origin;
-            let refererSpoof = tObj.origin + tObj.pathname; // FIXED: Better Referer Spoofing for API/CDN
+            let refererSpoof = tObj.origin + tObj.pathname;
             if (isProxyActive) {
                 let pDataString = decrypt(isProxyActive);
                 if (pDataString) {
@@ -240,7 +267,6 @@ export default {
             proxyHeaders.set("Host", tObj.hostname);
             proxyHeaders.set("Origin", originSpoof);
             proxyHeaders.set("Referer", refererSpoof);
-            proxyHeaders.delete("Accept-Encoding");
             
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
@@ -250,21 +276,7 @@ export default {
 
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
-                const responseHeaders = new Headers();
-                
-                for (const[key, value] of proxyRes.headers.entries()) {
-                    if (key.toLowerCase() === 'set-cookie') {
-                        let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
-                        responseHeaders.append('Set-Cookie', modCookie);
-                    } else if (key.toLowerCase() !== 'access-control-allow-origin') {
-                        responseHeaders.append(key, value);
-                    }
-                }
-                
-                responseHeaders.set("Access-Control-Allow-Origin", reqOrigin);
-                responseHeaders.set("Access-Control-Allow-Credentials", "true");
-                responseHeaders.set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Date, Server, Transfer-Encoding, Authorization, sid, Token"); 
-
+                const responseHeaders = cleanHeaders(proxyRes, reqOrigin);
                 return new Response(proxyRes.body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
             } catch(e) {
                 return new Response("API Proxy Error", { status: 500 });
@@ -526,7 +538,7 @@ export default {
                                                 </label>\`;
                                             if(hasSite) {
                                                 let confs = pData.siteConf?.[siteId] ||[];
-                                                if(!Array.isArray(confs)) confs = [confs];
+                                                if(!Array.isArray(confs)) confs =[confs];
                                                 confs.forEach((conf, idx) => {
                                                     html += \`<div class="mt-2 p-3 bg-white/5 border border-white/5 rounded-sm relative">
                                                         <button onclick="delPinSiteAcc('\${pin}','\${siteId}',\${idx})" class="absolute top-2 right-2 text-red-500 hover:text-red-400 bg-red-500/10 w-5 h-5 flex items-center justify-center rounded-sm">✖</button>
@@ -849,8 +861,21 @@ export default {
             proxyHeaders.set("Host", targetUrl.hostname);
             proxyHeaders.set("Origin", targetDomain);
             
-            // FIXED: Set Dynamic Referer so Hotlinking/CDN protection doesn't block CSS
-            proxyHeaders.set("Referer", targetDomain + url.pathname + url.search); 
+            // ✅ EXACT REFERER MATCHING
+            const reqReferer = request.headers.get("Referer");
+            if (reqReferer) {
+                try {
+                    let refUrl = new URL(reqReferer);
+                    if (refUrl.hostname === url.hostname) {
+                        proxyHeaders.set("Referer", targetDomain + refUrl.pathname + refUrl.search);
+                    } else {
+                        proxyHeaders.set("Referer", targetDomain + "/");
+                    }
+                } catch(e) { proxyHeaders.set("Referer", targetDomain + "/"); }
+            } else {
+                proxyHeaders.set("Referer", targetDomain + "/");
+            }
+            
             proxyHeaders.delete("Accept-Encoding"); 
 
             delete cookies['portal_session'];
@@ -862,24 +887,7 @@ export default {
             if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) fetchConfig.body = request.body;
 
             const proxyRes = await fetch(targetUrl.toString(), fetchConfig);
-            const responseHeaders = new Headers();
-            
-            const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security', 'x-content-type-options'];
-            const contentType = proxyRes.headers.get("Content-Type") || "";
-            const isHtml = contentType.toLowerCase().includes("text/html");
-
-            for (const [key, value] of proxyRes.headers.entries()) {
-                const kLower = key.toLowerCase();
-                if (kLower === 'set-cookie') {
-                    let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
-                    responseHeaders.append('Set-Cookie', modCookie);
-                } else if (kLower === 'content-encoding' && isHtml) {
-                    // FIXED: Skip Content-Encoding for HTML since we decompress and modify it
-                    continue;
-                } else if (!removeHeaders.includes(kLower)) {
-                    responseHeaders.append(key, value);
-                }
-            }
+            const responseHeaders = cleanHeaders(proxyRes, url.origin);
 
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
@@ -887,32 +895,32 @@ export default {
             responseHeaders.append("Set-Cookie", `proxy_active=${isProxyActive}; HttpOnly; Path=/; Max-Age=3600; SameSite=Lax`);
 
             let body = proxyRes.body;
+            const contentType = responseHeaders.get("Content-Type") || "";
+            const isHtml = contentType.toLowerCase().includes("text/html");
             
             // 🚀 ONLY PROXY HTML. LEAVE CSS & JS UNTOUCHED SO THEY LOAD PERFECTLY!
             if (isHtml) {
                 try {
                     let htmlText = await proxyRes.text();
                     
-                    // 1. Basic Replacement
+                    // Domain Replacements
                     htmlText = htmlText.split(targetDomain).join(url.origin);
                     const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
                     htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
 
-                    // FIXED 2. Advanced URL Rewrite for CDN/Subdomains CSS and JS Assets
-                    htmlText = htmlText.replace(/(href|src)\s*=\s*["'](https?:\/\/[^"']+)["']/gi, (match, attr, urlStr) => {
-                        if (urlStr.startsWith(targetDomain) || urlStr.startsWith(url.origin)) {
-                            return match;
-                        } else if (
-                            (attr.toLowerCase() === 'href' && (urlStr.includes('.css') || match.includes('stylesheet'))) ||
-                            (attr.toLowerCase() === 'src' && (urlStr.includes('.js') || urlStr.includes('.png') || urlStr.includes('.jpg') || urlStr.includes('.svg')))
-                        ) {
-                            return `${attr}="/__api_proxy?target=${encodeURIComponent(urlStr)}"`;
-                        }
-                        return match;
-                    });
+                    // ✅ REMOVE STRICT BROWSER SECURITY ON ASSETS
+                    htmlText = htmlText.replace(/integrity=["'][^"']*["']/gi, '');
+                    htmlText = htmlText.replace(/crossorigin=["'][^"']*["']/gi, '');
 
-                    // FIXED 3. Fix Base Tags to prevent routing issues
-                    htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']/gi, '<base href="/"');
+                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS for CDN)
+                    htmlText = htmlText.replace(/(href|src)=["'](https?:\/\/[^"']+)["']/gi, (match, p1, p2) => {
+                        if (p2.startsWith(targetDomain) || p2.startsWith(url.origin) || p2.includes(url.host) || p2.startsWith('http://www.w3.org')) return match;
+                        return `${p1}="/__api_proxy?target=${encodeURIComponent(p2)}"`;
+                    });
+                    
+                    htmlText = htmlText.replace(/(href|src)=["'](\/\/[^"']+)["']/gi, (match, p1, p2) => {
+                        return `${p1}="/__api_proxy?target=${encodeURIComponent('https:' + p2)}"`;
+                    });
                     
                     const encTargetTrim = encrypt(targetDomain).substring(0,8);
                     
@@ -970,14 +978,19 @@ export default {
         var apiTarget = "${autoApi}";
         var apiHost = apiTarget ? new URL(apiTarget).hostname : "";
 
-        // FIXED: Intercept dynamic chunk loading from frameworks like React/Vue
+        // ✅ HANDLE DYNAMIC REACT/VUE SCRIPT INSERTIONS
         const rewriteNode = function(el) {
             if (el && el.tagName) {
                 var tag = el.tagName.toLowerCase();
-                if (tag === 'script' && el.src && el.src.startsWith('http') && !el.src.includes(window.location.hostname)) {
-                    el.src = '/__api_proxy?target=' + encodeURIComponent(el.src);
-                } else if (tag === 'link' && el.href && el.href.startsWith('http') && !el.href.includes(window.location.hostname)) {
-                    el.href = '/__api_proxy?target=' + encodeURIComponent(el.href);
+                if ((tag === 'script' && el.src) || (tag === 'link' && el.href)) {
+                    var u = tag === 'script' ? el.src : el.href;
+                    if (u.startsWith('http') && !u.includes(window.location.hostname)) {
+                        var proxied = '/__api_proxy?target=' + encodeURIComponent(u);
+                        if (tag === 'script') el.src = proxied;
+                        else el.href = proxied;
+                    }
+                    if (el.integrity) el.removeAttribute('integrity');
+                    if (el.crossOrigin) el.removeAttribute('crossOrigin');
                 }
             }
         };
@@ -1200,8 +1213,6 @@ export default {
                     else htmlText = stealthScript + htmlText;
                     
                     body = htmlText;
-                    responseHeaders.delete("Content-Length"); 
-                    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
                 } catch(err) {}
             }
             
