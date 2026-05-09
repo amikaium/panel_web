@@ -152,19 +152,23 @@ const landingPageHTML = `
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
 
-// ✅ GLOBAL HEADER CLEANER (Fixes CSS & JS loading issues by removing gzip conflicts)
+// ✅ CRITICAL FIX: The ultimate header cleaner for CSS/JS compression issues
 const cleanHeaders = (proxyRes, reqOrigin = null) => {
     const responseHeaders = new Headers();
+    // WE MUST REMOVE 'content-encoding' and 'content-length' FOR ALL FILES!
+    // Because Cloudflare Worker fetch() automatically decompresses gzip bodies.
+    // If we leave the header, the browser fails to load CSS thinking it's still gzipped!
     const removeHeaders =[
         'content-security-policy', 'content-security-policy-report-only', 
         'x-frame-options', 'strict-transport-security', 'x-content-type-options',
-        'content-encoding', 'content-length', 'transfer-encoding', 'access-control-allow-origin'
+        'content-encoding', 'content-length', 'transfer-encoding', 'access-control-allow-origin',
+        'timing-allow-origin', 'cross-origin-resource-policy', 'cross-origin-opener-policy'
     ];
     for (const [key, value] of proxyRes.headers.entries()) {
         const kLower = key.toLowerCase();
         if (kLower === 'set-cookie') {
             let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
-            modCookie = modCookie.replace(/SameSite=(Strict|None)/gi, 'SameSite=Lax'); // Ensure cookies work in proxy
+            modCookie = modCookie.replace(/SameSite=(Strict|None)/gi, 'SameSite=Lax'); 
             responseHeaders.append('Set-Cookie', modCookie);
         } else if (!removeHeaders.includes(kLower)) {
             responseHeaders.append(key, value);
@@ -173,7 +177,7 @@ const cleanHeaders = (proxyRes, reqOrigin = null) => {
     if (reqOrigin) {
         responseHeaders.set("Access-Control-Allow-Origin", reqOrigin);
         responseHeaders.set("Access-Control-Allow-Credentials", "true");
-        responseHeaders.set("Access-Control-Expose-Headers", "Content-Length, Content-Type, Date, Server, Authorization, sid, Token"); 
+        responseHeaders.set("Access-Control-Expose-Headers", "*"); 
     }
     return responseHeaders;
 };
@@ -235,7 +239,7 @@ export default {
                     headers: {
                         "Access-Control-Allow-Origin": reqOrigin,
                         "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-                        "Access-Control-Allow-Headers": request.headers.get("Access-Control-Request-Headers") || "Content-Type, Authorization, X-Requested-With, Accept, sid, Token, token, sid-x",
+                        "Access-Control-Allow-Headers": request.headers.get("Access-Control-Request-Headers") || "*",
                         "Access-Control-Allow-Credentials": "true",
                         "Access-Control-Max-Age": "86400"
                     }
@@ -806,7 +810,7 @@ export default {
             if (userData.status === 'suspended' || !userData.sites.includes(siteId) || !db.sites[siteId]) return new Response("Access Denied", { status: 403 });
             
             let confs = userData.siteConf?.[siteId] ||[];
-            if (!Array.isArray(confs)) confs = [confs];
+            if (!Array.isArray(confs)) confs =[confs];
             const conf = confs[accIdx] || {};
 
             const proxyData = JSON.stringify({ 
@@ -861,7 +865,6 @@ export default {
             proxyHeaders.set("Host", targetUrl.hostname);
             proxyHeaders.set("Origin", targetDomain);
             
-            // ✅ EXACT REFERER MATCHING
             const reqReferer = request.headers.get("Referer");
             if (reqReferer) {
                 try {
@@ -876,7 +879,6 @@ export default {
                 proxyHeaders.set("Referer", targetDomain + "/");
             }
             
-            proxyHeaders.delete("Accept-Encoding"); 
 
             delete cookies['portal_session'];
             delete cookies['proxy_active'];
@@ -890,7 +892,13 @@ export default {
             const responseHeaders = cleanHeaders(proxyRes, url.origin);
 
             const locationHeader = responseHeaders.get("Location");
-            if (locationHeader) responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
+            if (locationHeader) {
+                if(locationHeader.startsWith(targetDomain)) {
+                    responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
+                } else if (!locationHeader.startsWith('/')) {
+                    responseHeaders.set("Location", "/__api_proxy?target=" + encodeURIComponent(locationHeader));
+                }
+            }
 
             responseHeaders.append("Set-Cookie", `proxy_active=${isProxyActive}; HttpOnly; Path=/; Max-Age=3600; SameSite=Lax`);
 
@@ -903,16 +911,17 @@ export default {
                 try {
                     let htmlText = await proxyRes.text();
                     
-                    // Domain Replacements
+                    // ✅ DOMAIN REPLACEMENTS
                     htmlText = htmlText.split(targetDomain).join(url.origin);
                     const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
                     htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
 
-                    // ✅ REMOVE STRICT BROWSER SECURITY ON ASSETS
+                    // ✅ FIX INTEGRITY & CROSSORIGIN BLOCKING
                     htmlText = htmlText.replace(/integrity=["'][^"']*["']/gi, '');
                     htmlText = htmlText.replace(/crossorigin=["'][^"']*["']/gi, '');
+                    htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']\s*\/?>/gi, '');
 
-                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS for CDN)
+                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS)
                     htmlText = htmlText.replace(/(href|src)=["'](https?:\/\/[^"']+)["']/gi, (match, p1, p2) => {
                         if (p2.startsWith(targetDomain) || p2.startsWith(url.origin) || p2.includes(url.host) || p2.startsWith('http://www.w3.org')) return match;
                         return `${p1}="/__api_proxy?target=${encodeURIComponent(p2)}"`;
@@ -978,7 +987,6 @@ export default {
         var apiTarget = "${autoApi}";
         var apiHost = apiTarget ? new URL(apiTarget).hostname : "";
 
-        // ✅ HANDLE DYNAMIC REACT/VUE SCRIPT INSERTIONS
         const rewriteNode = function(el) {
             if (el && el.tagName) {
                 var tag = el.tagName.toLowerCase();
