@@ -51,7 +51,7 @@ const landingPageHTML = `
 <body class="antialiased selection:bg-white selection:text-black">
     <nav class="fixed w-full z-50 border-b border-white/10 bg-[#050505]/90 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-widest uppercase cursor-default select-none flex items-center gap-2">
+            <div class="text-xl font-bold tracking-widest uppercase cursor-default select-none flex items-center gap-2 flex-shrink-0">
                 <svg class="w-6 h-6 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                 Nexus<span class="text-gray-500">.</span>
             </div>
@@ -61,7 +61,7 @@ const landingPageHTML = `
                 <a href="#certifications" class="hover:text-white transition whitespace-nowrap">Security</a>
                 <a href="#contact" class="hover:text-white transition whitespace-nowrap">About</a>
             </div>
-            <button class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-gray-200 transition whitespace-nowrap">Client Login</button>
+            <button class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest bg-white text-black hover:bg-gray-200 transition whitespace-nowrap flex-shrink-0">Client Login</button>
         </div>
     </nav>
 
@@ -79,11 +79,10 @@ const landingPageHTML = `
                 <div class="pl-4 flex items-center justify-center pointer-events-none">
                     <svg id="search-icon" class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <!-- Completely stealthy placeholder to mask the PIN input -->
                 <input type="text" id="main-search" placeholder="Enter tracking ID, project keyword or node number..." autocomplete="off" spellcheck="false"
                     class="w-full bg-transparent text-white text-sm px-4 py-3 placeholder-gray-600 tracking-wide font-medium">
-                <button type="submit" id="search-btn" class="px-6 py-3 bg-white hover:bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest transition flex items-center justify-center min-w-[120px]">
-                    <span id="btn-text" class="whitespace-nowrap">Check Now</span><div id="search-spinner" class="loader hidden"></div>
+                <button type="submit" id="search-btn" class="px-6 py-3 bg-white hover:bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest transition flex items-center justify-center whitespace-nowrap flex-shrink-0">
+                    <span id="btn-text">Check Now</span><div id="search-spinner" class="loader hidden ml-2"></div>
                 </button>
             </form>
             <p id="search-msg" class="text-[10px] font-bold text-gray-500 mt-4 tracking-widest uppercase opacity-0 transition-opacity h-4"></p>
@@ -105,10 +104,10 @@ const landingPageHTML = `
     <!-- Quick Stats -->
     <div class="w-full border-b border-white/5 bg-[#080808]">
         <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-6 text-center">
-            <div><p class="text-3xl font-bold text-white mb-1">99.99%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Uptime SLA</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">99.99%</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Uptime SLA guaranteed</p></div>
             <div><p class="text-3xl font-bold text-white mb-1">250+</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Global Edge Nodes</p></div>
             <div><p class="text-3xl font-bold text-white mb-1">&lt;10ms</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Network Latency</p></div>
-            <div><p class="text-3xl font-bold text-white mb-1">AES-256</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">Encrypted</p></div>
+            <div><p class="text-3xl font-bold text-white mb-1">AES-256</p><p class="text-[9px] text-gray-500 uppercase tracking-widest">End-to-End Encryption</p></div>
         </div>
     </div>
 
@@ -178,6 +177,31 @@ const landingPageHTML = `
                         <div class="flex justify-between text-xs"><span class="text-gray-500">SA-East (São Paulo)</span><span class="text-white">22ms</span></div>
                         <div class="flex justify-between text-xs pt-2 border-t border-white/5"><span class="text-indigo-400">Total Active Sessions</span><span class="text-white">142,893</span></div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certification & Compliance -->
+    <section id="certifications" class="py-16 bg-[#020202] border-t border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-8">Audited & Certified Security Standards</h3>
+            <div class="flex flex-wrap justify-center gap-6">
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">SOC 2 TYPE II</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">ISO 27001</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">GDPR COMPLIANT</span>
+                </div>
+                <div class="px-6 py-3 border border-white/10 bg-white/5 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-bold text-gray-300 tracking-wider">HIPAA READY</span>
                 </div>
             </div>
         </div>
@@ -391,7 +415,6 @@ export default {
             const { code } = await request.json();
             const strCode = String(code).trim();
             
-            // ADMIN LOGIN CHECK (Fixed cookie headers)
             if (db.adminPin && db.adminPin !== "SET_YOUR_PIN_HERE" && strCode === String(db.adminPin).trim()) {
                 const headers = new Headers();
                 headers.set("Content-Type", "application/json");
@@ -399,7 +422,6 @@ export default {
                 return new Response(JSON.stringify({ success: true, role: 'admin' }), { headers });
             }
             
-            // USER LOGIN CHECK
             if (db.pins && db.pins[strCode]) {
                 const headers = new Headers();
                 headers.set("Content-Type", "application/json");
@@ -977,7 +999,7 @@ export default {
             const proxyHeaders = new Headers(request.headers);
             proxyHeaders.set("Host", targetUrl.hostname);
             proxyHeaders.set("Origin", targetDomain);
-            proxyHeaders.set("Referer", targetDomain + targetUrl.pathname);
+            proxyHeaders.set("Referer", targetDomain + "/"); 
             proxyHeaders.delete("Accept-Encoding"); 
 
             delete cookies['portal_session'];
@@ -991,9 +1013,9 @@ export default {
             const proxyRes = await fetch(targetUrl.toString(), fetchConfig);
             const responseHeaders = new Headers();
             
-            const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security'];
+            const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security', 'x-content-type-options'];
             
-            for (const[key, value] of proxyRes.headers.entries()) {
+            for (const [key, value] of proxyRes.headers.entries()) {
                 const kLower = key.toLowerCase();
                 if (kLower === 'set-cookie') {
                     let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
@@ -1022,7 +1044,17 @@ export default {
                     
                     if (contentType.includes("text/html")) {
                         // 🚀 STRIP INTEGRITY TAGS SO CSS/JS FROM CDNs LOAD PROPERLY
-                        textBody = textBody.replace(/integrity=(['"]).*?\1/gi, '');
+                        textBody = textBody.replace(/integrity\s*=\s*(["']).*?\1/gi, '');
+                        textBody = textBody.replace(/crossorigin\s*=\s*(["']).*?\1/gi, '');
+
+                        // 🚀 DEEP PROXY FOR ALL EXTERNAL CDNs (CSS, JS, Fonts, Images)
+                        textBody = textBody.replace(/(href|src)\s*=\s*(["'])(https?:\/\/[^"']+)\2/gi, (match, attr, quote, assetUrl) => {
+                            if (assetUrl.startsWith(url.origin) || assetUrl.includes(tHost)) return match;
+                            if (assetUrl.match(/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|ico)(\?.*)?$/i)) {
+                                return `${attr}=${quote}/__api_proxy?target=${encodeURIComponent(assetUrl)}${quote}`;
+                            }
+                            return match;
+                        });
 
                         const encTargetTrim = encrypt(targetDomain).substring(0,8);
                         
@@ -1288,13 +1320,22 @@ export default {
                         if (textBody.includes("<head>")) textBody = textBody.replace("<head>", "<head>" + stealthScript); 
                         else textBody = stealthScript + textBody;
                     }
+
+                    // 🚀 REWRITE CSS @IMPORT AND URL() SO FONTS & BACKGROUNDS WORK!
+                    if (contentType.includes("text/css")) {
+                        textBody = textBody.replace(/url\s*\(\s*(["']?)(https?:\/\/[^"')]+)\1\s*\)/gi, (match, quote, assetUrl) => {
+                            if (assetUrl.startsWith(url.origin) || assetUrl.includes(tHost)) return match;
+                            return `url(${quote}/__api_proxy?target=${encodeURIComponent(assetUrl)}${quote})`;
+                        });
+                    }
                     
                     body = textBody;
-                    // 🚀 CRITICAL FIX: Delete Content-Encoding so CSS/JS load properly after parsing!
+
+                    // 🚀 EXTREMELY CRITICAL: Remove Encoding and Length to prevent browser from reading garbage data
                     responseHeaders.delete("Content-Length"); 
                     responseHeaders.delete("Content-Encoding"); 
                 } catch(err) {
-                    // Fallback to original body stream if parsing fails
+                    // Fallback
                 }
             }
             
