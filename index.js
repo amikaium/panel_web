@@ -222,7 +222,7 @@ export default {
             const proxyHeaders = new Headers(request.headers);
             
             let originSpoof = tObj.origin;
-            let refererSpoof = tObj.origin + "/";
+            let refererSpoof = tObj.origin + tObj.pathname; // FIXED: Better Referer Spoofing for API/CDN
             if (isProxyActive) {
                 let pDataString = decrypt(isProxyActive);
                 if (pDataString) {
@@ -231,7 +231,7 @@ export default {
                         if (pData.t) {
                             let originUrl = new URL(pData.t);
                             originSpoof = originUrl.origin;
-                            refererSpoof = originUrl.origin + "/";
+                            refererSpoof = originUrl.origin + tObj.pathname;
                         }
                     } catch(e) {}
                 }
@@ -585,7 +585,7 @@ export default {
                             });
                             html += \`</div>\`;
                         }
-                        // Settings logic remains unchanged...
+                        
                         if(tab === 'settings') {
                             let n = db.settings.notification;
                             html += \`<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -683,7 +683,6 @@ export default {
 
                     sitesHTML += `
                     <div class="border border-white/5 bg-[#0a0a0a] flex flex-col rounded-md shadow-lg overflow-hidden ${isSuspended ? 'opacity-60 grayscale' : ''}">
-                        <!-- Visible Header (Accordion Toggle) -->
                         <div class="flex justify-between items-center p-5 cursor-pointer hover:bg-white/5 transition" onclick="toggleDetails('${siteId}')">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center rounded-md flex-shrink-0">
@@ -700,7 +699,6 @@ export default {
                             </div>
                         </div>
                         
-                        <!-- Hidden Accordion Body -->
                         <div id="details-${siteId}" class="hidden border-t border-white/5 bg-black/40 p-5 space-y-4">
                             <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full rounded-sm mb-2">
                                 <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Portal</span>
@@ -850,7 +848,9 @@ export default {
             const proxyHeaders = new Headers(request.headers);
             proxyHeaders.set("Host", targetUrl.hostname);
             proxyHeaders.set("Origin", targetDomain);
-            proxyHeaders.set("Referer", targetDomain + "/"); 
+            
+            // FIXED: Set Dynamic Referer so Hotlinking/CDN protection doesn't block CSS
+            proxyHeaders.set("Referer", targetDomain + url.pathname + url.search); 
             proxyHeaders.delete("Accept-Encoding"); 
 
             delete cookies['portal_session'];
@@ -865,12 +865,17 @@ export default {
             const responseHeaders = new Headers();
             
             const removeHeaders =['content-security-policy', 'content-security-policy-report-only', 'x-frame-options', 'strict-transport-security', 'x-content-type-options'];
-            
+            const contentType = proxyRes.headers.get("Content-Type") || "";
+            const isHtml = contentType.toLowerCase().includes("text/html");
+
             for (const [key, value] of proxyRes.headers.entries()) {
                 const kLower = key.toLowerCase();
                 if (kLower === 'set-cookie') {
                     let modCookie = value.replace(/Domain=[^;]+;?\s*/gi, '');
                     responseHeaders.append('Set-Cookie', modCookie);
+                } else if (kLower === 'content-encoding' && isHtml) {
+                    // FIXED: Skip Content-Encoding for HTML since we decompress and modify it
+                    continue;
                 } else if (!removeHeaders.includes(kLower)) {
                     responseHeaders.append(key, value);
                 }
@@ -882,13 +887,32 @@ export default {
             responseHeaders.append("Set-Cookie", `proxy_active=${isProxyActive}; HttpOnly; Path=/; Max-Age=3600; SameSite=Lax`);
 
             let body = proxyRes.body;
-            const contentType = responseHeaders.get("Content-Type") || "";
             
             // 🚀 ONLY PROXY HTML. LEAVE CSS & JS UNTOUCHED SO THEY LOAD PERFECTLY!
-            if (contentType.toLowerCase().includes("text/html")) {
+            if (isHtml) {
                 try {
                     let htmlText = await proxyRes.text();
+                    
+                    // 1. Basic Replacement
                     htmlText = htmlText.split(targetDomain).join(url.origin);
+                    const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
+                    htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
+
+                    // FIXED 2. Advanced URL Rewrite for CDN/Subdomains CSS and JS Assets
+                    htmlText = htmlText.replace(/(href|src)\s*=\s*["'](https?:\/\/[^"']+)["']/gi, (match, attr, urlStr) => {
+                        if (urlStr.startsWith(targetDomain) || urlStr.startsWith(url.origin)) {
+                            return match;
+                        } else if (
+                            (attr.toLowerCase() === 'href' && (urlStr.includes('.css') || match.includes('stylesheet'))) ||
+                            (attr.toLowerCase() === 'src' && (urlStr.includes('.js') || urlStr.includes('.png') || urlStr.includes('.jpg') || urlStr.includes('.svg')))
+                        ) {
+                            return `${attr}="/__api_proxy?target=${encodeURIComponent(urlStr)}"`;
+                        }
+                        return match;
+                    });
+
+                    // FIXED 3. Fix Base Tags to prevent routing issues
+                    htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']/gi, '<base href="/"');
                     
                     const encTargetTrim = encrypt(targetDomain).substring(0,8);
                     
@@ -945,7 +969,28 @@ export default {
         var targetHost = new URL("` + targetDomain + `").hostname;
         var apiTarget = "${autoApi}";
         var apiHost = apiTarget ? new URL(apiTarget).hostname : "";
-        var rootDomain = targetHost.split('.').slice(-2).join('.'); 
+
+        // FIXED: Intercept dynamic chunk loading from frameworks like React/Vue
+        const rewriteNode = function(el) {
+            if (el && el.tagName) {
+                var tag = el.tagName.toLowerCase();
+                if (tag === 'script' && el.src && el.src.startsWith('http') && !el.src.includes(window.location.hostname)) {
+                    el.src = '/__api_proxy?target=' + encodeURIComponent(el.src);
+                } else if (tag === 'link' && el.href && el.href.startsWith('http') && !el.href.includes(window.location.hostname)) {
+                    el.href = '/__api_proxy?target=' + encodeURIComponent(el.href);
+                }
+            }
+        };
+        const origAppend = Element.prototype.appendChild;
+        Element.prototype.appendChild = function() {
+            rewriteNode(arguments[0]);
+            return origAppend.apply(this, arguments);
+        };
+        const origInsert = Element.prototype.insertBefore;
+        Element.prototype.insertBefore = function() {
+            rewriteNode(arguments[0]);
+            return origInsert.apply(this, arguments);
+        };
 
         function shouldIntercept(urlStr) {
             if(typeof urlStr !== 'string') return false;
