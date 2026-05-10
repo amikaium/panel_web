@@ -1,3 +1,11 @@
+আপনার নির্দেশ অনুযায়ী আমি পূর্বের সমাধানগুলো মূল কোডের সাথে যুক্ত করে একদম
+সম্পূর্ণ এবং আপডেট করা কোডটি নিচে দিয়ে দিলাম।
+
+এই কোডটি সরাসরি কপি করে আপনার Cloudflare Worker-এ পেস্ট করে Deploy (Save) করুন।
+ইনশাআল্লাহ্ এখন থেকে সকল সাইটের লেআউট এবং CSS একদম পারফেক্টলি লোড হবে।
+
+এখানে সম্পূর্ণ আপডেটেড কোডটি দেওয়া হলো:
+
 // ==========================================
 // ⚙️ SECURE FIREBASE CONFIGURATION
 // ==========================================
@@ -325,9 +333,25 @@ export default {
                 
                 let body = proxyRes.body;
                 
+                // 🔥 UPDATED CSS PARSING FOR CDN AND RELATIVE URLS 🔥
                 if (contentType.toLowerCase().includes("text/css")) {
                     try {
                         let cssText = await proxyRes.text();
+                        
+                        // 🔥 FIX: Rewrite relative URL & @import paths inside CDN CSS files
+                        cssText = cssText.replace(/url\(\s*(['"]?)(?!data:)(?!http:)(?!https:)([^'")]+)\1\s*\)/gi, (match, quote, path) => {
+                            try {
+                                let absoluteUrl = new URL(path.trim(), targetUrlStr).toString();
+                                return `url(${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote})`;
+                            } catch(e) { return match; }
+                        });
+                        cssText = cssText.replace(/@import\s+(['"])(?!data:)(?!http:)(?!https:)([^'"]+)\1/gi, (match, quote, path) => {
+                            try {
+                                let absoluteUrl = new URL(path.trim(), targetUrlStr).toString();
+                                return `@import ${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote}`;
+                            } catch(e) { return match; }
+                        });
+
                         if (isProxyActive) {
                             let pData = JSON.parse(decrypt(isProxyActive));
                             if (pData.t) {
@@ -1019,6 +1043,21 @@ export default {
             if (isCss) {
                 try {
                     let cssText = await proxyRes.text();
+                    
+                    // 🔥 FIX: Rewrite relative URL & @import paths inside CDN CSS files
+                    cssText = cssText.replace(/url\(\s*(['"]?)(?!data:)(?!http:)(?!https:)([^'")]+)\1\s*\)/gi, (match, quote, path) => {
+                        try {
+                            let absoluteUrl = new URL(path.trim(), targetDomain).toString();
+                            return `url(${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote})`;
+                        } catch(e) { return match; }
+                    });
+                    cssText = cssText.replace(/@import\s+(['"])(?!data:)(?!http:)(?!https:)([^'"]+)\1/gi, (match, quote, path) => {
+                        try {
+                            let absoluteUrl = new URL(path.trim(), targetDomain).toString();
+                            return `@import ${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote}`;
+                        } catch(e) { return match; }
+                    });
+
                     cssText = cssText.split(targetDomain).join(url.origin);
                     const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
                     cssText = cssText.split(schemaLessTarget).join('//' + url.host);
@@ -1036,9 +1075,9 @@ export default {
                     const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
                     htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
 
-                    // ✅ FIX INTEGRITY & CROSSORIGIN BLOCKING
-                    htmlText = htmlText.replace(/integrity=["'][^"']*["']/gi, '');
-                    htmlText = htmlText.replace(/crossorigin=["'][^"']*["']/gi, '');
+                    // ✅ FIX INTEGRITY & CROSSORIGIN BLOCKING (Strict bypass)
+                    htmlText = htmlText.replace(/integrity(=["'][^"']*["'])?/gi, '');
+                    htmlText = htmlText.replace(/crossorigin(=["'][^"']*["'])?/gi, '');
                     htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']\s*\/?>/gi, '');
 
                     // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS)
