@@ -152,21 +152,18 @@ const landingPageHTML = `
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
 
-// ✅ CRITICAL FIX: Custom Domain CSS/JS loading issue solver!
-// Only removes 'content-encoding' if the file is HTML. For CSS/JS, it keeps it intact to prevent browser errors!
-const cleanHeaders = (proxyRes, reqOrigin = null, isHtml = false) => {
+// ✅ ULTIMATE FIX FOR CUSTOM DOMAIN CSS/JS ISSUES:
+// This strips out all compression headers so Cloudflare doesn't double-compress 
+// and break the files on strict custom domains.
+const cleanHeaders = (proxyRes, reqOrigin = null) => {
     const responseHeaders = new Headers();
     const removeHeaders =[
         'content-security-policy', 'content-security-policy-report-only', 
         'x-frame-options', 'strict-transport-security', 'x-content-type-options',
         'access-control-allow-origin', 'timing-allow-origin', 
-        'cross-origin-resource-policy', 'cross-origin-opener-policy'
+        'cross-origin-resource-policy', 'cross-origin-opener-policy',
+        'content-encoding', 'content-length', 'transfer-encoding' // MUST BE REMOVED FOR ALL FILES!
     ];
-    
-    // Only strip encoding headers if we are modifying HTML
-    if (isHtml) {
-        removeHeaders.push('content-encoding', 'content-length', 'transfer-encoding');
-    }
 
     for (const[key, value] of proxyRes.headers.entries()) {
         const kLower = key.toLowerCase();
@@ -283,7 +280,6 @@ export default {
             proxyHeaders.delete("Sec-Fetch-Site");
             proxyHeaders.delete("Sec-Fetch-User");
             
-            // ✅ Force Uncompressed from Origin (Fixes CSS/JS load on Custom Domains)
             proxyHeaders.delete("Accept-Encoding");
             proxyHeaders.set("Accept-Encoding", "identity"); 
             
@@ -295,9 +291,7 @@ export default {
 
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
-                const contentType = proxyRes.headers.get("Content-Type") || "";
-                const isHtml = contentType.toLowerCase().includes("text/html");
-                const responseHeaders = cleanHeaders(proxyRes, reqOrigin, isHtml);
+                const responseHeaders = cleanHeaders(proxyRes, reqOrigin);
                 return new Response(proxyRes.body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
             } catch(e) {
                 return new Response("API Proxy Error", { status: 500 });
@@ -343,7 +337,7 @@ export default {
             const { siteId, accIdx, newPassword } = await request.json();
             
             let confs = db.pins[userPin].siteConf[siteId];
-            if (!Array.isArray(confs)) confs = [confs]; 
+            if (!Array.isArray(confs)) confs =[confs]; 
             
             if (confs[accIdx]) {
                 confs[accIdx].p = newPassword;
@@ -695,7 +689,7 @@ export default {
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[70px]">Username</span>
                                     <input type="text" readonly value="${conf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all font-mono">
                                     <button onclick="copyLink('${conf.u}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Username">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
                                     </button>
                                 </div>
                                 
@@ -707,7 +701,7 @@ export default {
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </button>
                                         <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}-${idx}').value, this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Pwd">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
                                         </button>
                                         <button onclick="toggleEditPwd('${siteId}-${idx}')" class="w-7 h-7 flex items-center justify-center bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black transition-all rounded-none border border-yellow-500/30" title="Update">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -751,7 +745,7 @@ export default {
                             <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full rounded-none mb-2">
                                 <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Portal</span>
                                 <input type="text" readonly value="${site.userLink}" class="flex-grow bg-transparent text-[11px] text-blue-400 px-2 outline-none min-w-0 truncate select-all">
-                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg></button>
                             </div>
                             
                             <div class="space-y-4">
@@ -821,7 +815,7 @@ export default {
                         if(!text) return;
                         navigator.clipboard.writeText(text);
                         const old = btn.innerHTML;
-                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                         setTimeout(() => btn.innerHTML = old, 1500);
                     }
                     
@@ -1149,19 +1143,21 @@ export default {
             }).catch(()=>{});
         };
 
-        function makeDraggable(wrapper, header) {
+        function makeDraggable(wrapper) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            header.onmousedown = dragMouseDown;
-            header.ontouchstart = dragMouseDown;
+            wrapper.onmousedown = dragMouseDown;
+            wrapper.ontouchstart = dragMouseDown;
 
             function dragMouseDown(e) {
-                if(e.target.closest('#nx-fw-close-btn') || e.target.closest('.nx-fw-copy')) return;
+                // Ignore clicks on inputs, buttons, or close icon to allow interaction
+                if(e.target.tagName === 'INPUT' || e.target.closest('button')) return;
+                
                 e = e || window.event;
-                // e.preventDefault(); // removed to allow clicking inside
                 if (e.type === 'touchstart') {
                     pos3 = e.touches[0].clientX;
                     pos4 = e.touches[0].clientY;
                 } else {
+                    e.preventDefault(); 
                     pos3 = e.clientX;
                     pos4 = e.clientY;
                 }
@@ -1173,7 +1169,6 @@ export default {
 
             function elementDrag(e) {
                 e = e || window.event;
-                e.preventDefault(); 
                 let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
                 
@@ -1185,6 +1180,7 @@ export default {
                 let newTop = wrapper.offsetTop - pos2;
                 let newLeft = wrapper.offsetLeft - pos1;
                 
+                // Prevent dragging outside the screen
                 if (newTop < 0) newTop = 0;
                 if (newLeft < 0) newLeft = 0;
                 if (newTop + wrapper.offsetHeight > window.innerHeight) newTop = window.innerHeight - wrapper.offsetHeight;
@@ -1212,19 +1208,19 @@ export default {
 
             let wrapper = document.createElement('div');
             wrapper.id = 'nx-float-widget-wrapper';
-            wrapper.style.cssText = 'position:fixed !important; bottom:20px !important; right:20px !important; z-index:2147483647 !important; transition: opacity 0.3s ease !important;';
+            wrapper.style.cssText = 'position:fixed !important; bottom:20px !important; right:20px !important; z-index:2147483647 !important; transition: opacity 0.3s ease !important; cursor: move !important;';
 
             let style = document.createElement('style');
             style.innerHTML = \`
-                #nx-float-widget { width:300px !important; background:#0f172a !important; border:2px solid #059669 !important; border-radius:0px !important; box-shadow:0 15px 35px rgba(0,0,0,0.8) !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; padding:20px !important; color:#f3f4f6 !important; box-sizing:border-box !important; }
+                #nx-float-widget { width:310px !important; background:#0f172a !important; border:2px solid #059669 !important; border-radius:0px !important; box-shadow:0 15px 35px rgba(0,0,0,0.8) !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; padding:22px !important; color:#f3f4f6 !important; box-sizing:border-box !important; }
                 #nx-float-widget * { box-sizing:border-box !important; margin:0 !important; padding:0 !important; line-height:normal !important; letter-spacing:normal !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; text-transform:none !important; }
-                .nx-fw-header { display:flex !important; justify-content:space-between !important; align-items:center !important; margin-bottom:12px !important; cursor:move !important; }
+                .nx-fw-header { display:flex !important; justify-content:space-between !important; align-items:center !important; margin-bottom:12px !important; }
                 .nx-fw-title { font-size:15px !important; font-weight:bold !important; color:#10b981 !important; display:flex !important; align-items:center !important; gap:8px !important; pointer-events:none !important; }
                 .nx-fw-close { background:none !important; border:none !important; color:#9ca3af !important; cursor:pointer !important; padding:4px !important; border-radius:0px !important; transition:0.2s !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important; }
                 .nx-fw-close:hover { background:#334155 !important; color:#fff !important; }
-                .nx-fw-desc { font-size:12px !important; color:#cbd5e1 !important; margin-bottom:20px !important; line-height:1.5 !important; }
+                .nx-fw-desc { font-size:12.5px !important; color:#cbd5e1 !important; margin-bottom:20px !important; line-height:1.5 !important; pointer-events:none !important; }
                 .nx-fw-field { background:#1e293b !important; border:1px solid #334155 !important; border-radius:0px !important; padding:0 12px !important; margin-bottom:16px !important; height:38px !important; display:flex !important; justify-content:space-between !important; align-items:center !important; }
-                .nx-fw-label { font-size:11px !important; color:#94a3b8 !important; text-transform:uppercase !important; font-weight:bold !important; margin-bottom:6px !important; display:block !important; text-align:left !important; letter-spacing:0.5px !important; }
+                .nx-fw-label { font-size:11.5px !important; color:#94a3b8 !important; text-transform:uppercase !important; font-weight:bold !important; margin-bottom:6px !important; display:block !important; text-align:left !important; letter-spacing:0.5px !important; pointer-events:none !important; }
                 .nx-fw-val { font-size:14px !important; color:#fff !important; font-weight:500 !important; border:none !important; background:transparent !important; outline:none !important; width:100% !important; text-overflow:ellipsis !important; font-family:monospace !important; pointer-events:none !important; padding:0 !important; height:100% !important; }
                 .nx-fw-copy { background:#334155 !important; border:none !important; color:#cbd5e1 !important; border-radius:0px !important; width:26px !important; height:26px !important; cursor:pointer !important; transition:0.2s !important; display:flex !important; align-items:center !important; justify-content:center !important; margin-left:12px !important; flex-shrink:0 !important; padding:0 !important; }
                 .nx-fw-copy:hover { background:#475569 !important; color:#10b981 !important; }
@@ -1233,7 +1229,7 @@ export default {
             let widget = document.createElement('div');
             widget.id = 'nx-float-widget';
             widget.innerHTML = \`
-                <div class='nx-fw-header' id='nx-fw-header'>
+                <div class='nx-fw-header'>
                     <div class='nx-fw-title'>
                         <svg style='width:16px !important;height:16px !important;color:#10b981 !important;display:block !important;' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7z'></path></svg>
                         Panel Access
@@ -1265,8 +1261,8 @@ export default {
             wrapper.appendChild(widget);
             document.documentElement.appendChild(wrapper);
 
-            // Make it Draggable
-            makeDraggable(wrapper, document.getElementById('nx-fw-header'));
+            // Make the entire widget draggable
+            makeDraggable(wrapper);
 
             // 3 Seconds timeout for Close button
             document.getElementById('nx-fw-close-btn').addEventListener('click', () => {
