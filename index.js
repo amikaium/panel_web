@@ -152,8 +152,9 @@ const landingPageHTML = `
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
 
-// ✅ CRITICAL FIX: The ultimate header cleaner for CSS/JS compression & Cache issues
-const cleanHeaders = (proxyRes, reqOrigin = null, isTextModifier = false) => {
+// ✅ CRITICAL FIX: Only strip encoding if we explicitly altered the text. 
+// If it's a CSS/JS file, let it pass perfectly with its native compression!
+const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
     const responseHeaders = new Headers();
     const removeHeaders =[
         'content-security-policy', 'content-security-policy-report-only', 
@@ -162,8 +163,8 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isTextModifier = false) => {
         'cross-origin-resource-policy', 'cross-origin-opener-policy'
     ];
     
-    // Only strip encoding headers if we are modifying HTML or CSS
-    if (isTextModifier) {
+    // Only strip encoding headers if we parsed the HTML via .text()
+    if (isModified) {
         removeHeaders.push('content-encoding', 'content-length', 'transfer-encoding');
     }
 
@@ -184,8 +185,8 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isTextModifier = false) => {
         responseHeaders.set("Access-Control-Expose-Headers", "*"); 
     }
     
-    // ✅ CRITICAL FOR DOMAINS: Bypass Browser and Cloudflare Caching completely!
-    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, s-maxage=0, no-transform");
+    // Prevent strict CDNs from destroying the layout cache
+    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, s-maxage=0");
     return responseHeaders;
 };
 
@@ -261,6 +262,8 @@ export default {
             
             let originSpoof = tObj.origin;
             let refererSpoof = tObj.origin + tObj.pathname;
+            
+            // If proxy active, spoof as main site to bypass CDN hotlink protections
             if (isProxyActive) {
                 let pDataString = decrypt(isProxyActive);
                 if (pDataString) {
@@ -269,7 +272,7 @@ export default {
                         if (pData.t) {
                             let originUrl = new URL(pData.t);
                             originSpoof = originUrl.origin;
-                            refererSpoof = originUrl.origin + tObj.pathname;
+                            refererSpoof = originUrl.origin + "/"; 
                         }
                     } catch(e) {}
                 }
@@ -278,19 +281,17 @@ export default {
             proxyHeaders.set("Host", tObj.hostname);
             proxyHeaders.set("Origin", originSpoof);
             proxyHeaders.set("Referer", refererSpoof);
+            
             proxyHeaders.delete("Sec-Fetch-Dest");
             proxyHeaders.delete("Sec-Fetch-Mode");
             proxyHeaders.delete("Sec-Fetch-Site");
             proxyHeaders.delete("Sec-Fetch-User");
             
-            // Explicitly request uncompressed to prevent CF issues
-            proxyHeaders.delete("Accept-Encoding");
-            proxyHeaders.set("Accept-Encoding", "identity"); 
+            proxyHeaders.delete("Accept-Encoding"); // Let Fetch auto-negotiate
             
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
 
-            // ✅ Bypass CF Edge Cache for Proxy Requests
             const fetchConfig = { 
                 method: request.method, 
                 headers: proxyHeaders, 
@@ -301,29 +302,8 @@ export default {
 
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
-                const contentType = proxyRes.headers.get("Content-Type") || "";
-                const isTextModifier = contentType.toLowerCase().includes("text/html") || contentType.toLowerCase().includes("text/css");
-                const responseHeaders = cleanHeaders(proxyRes, reqOrigin, isTextModifier);
-                
-                let body = proxyRes.body;
-                
-                // Rewrite CSS files even via API Proxy so absolute CDNs don't break layouts
-                if (contentType.toLowerCase().includes("text/css")) {
-                    try {
-                        let cssText = await proxyRes.text();
-                        if (isProxyActive) {
-                            let pData = JSON.parse(decrypt(isProxyActive));
-                            if (pData.t) {
-                                cssText = cssText.split(pData.t).join(url.origin);
-                                const schemaLessTarget = pData.t.replace(/^https?:\/\//, '//');
-                                cssText = cssText.split(schemaLessTarget).join('//' + url.host);
-                            }
-                        }
-                        body = cssText;
-                    } catch(e) {}
-                }
-                
-                return new Response(body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
+                const responseHeaders = cleanHeaders(proxyRes, reqOrigin, false); // Passing unmodified body
+                return new Response(proxyRes.body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
             } catch(e) {
                 return new Response("API Proxy Error", { status: 500 });
             }
@@ -720,7 +700,7 @@ export default {
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[70px]">Username</span>
                                     <input type="text" readonly value="${conf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all font-mono">
                                     <button onclick="copyLink('${conf.u}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Username">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
                                     </button>
                                 </div>
                                 
@@ -732,7 +712,7 @@ export default {
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </button>
                                         <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}-${idx}').value, this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Pwd">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
                                         </button>
                                         <button onclick="toggleEditPwd('${siteId}-${idx}')" class="w-7 h-7 flex items-center justify-center bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black transition-all rounded-none border border-yellow-500/30" title="Update">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -776,7 +756,7 @@ export default {
                             <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full rounded-none mb-2">
                                 <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Portal</span>
                                 <input type="text" readonly value="${site.userLink}" class="flex-grow bg-transparent text-[11px] text-blue-400 px-2 outline-none min-w-0 truncate select-all">
-                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg></button>
                             </div>
                             
                             <div class="space-y-4">
@@ -846,7 +826,7 @@ export default {
                         if(!text) return;
                         navigator.clipboard.writeText(text);
                         const old = btn.innerHTML;
-                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                         setTimeout(() => btn.innerHTML = old, 1500);
                     }
                     
@@ -956,9 +936,9 @@ export default {
                 proxyHeaders.set("Referer", targetDomain + "/");
             }
             
-            // ✅ STOP CLOUDFLARE BLOCKING AND STRIP BROWSER SECURTY FOR PROXY REQUEST
+            // ✅ CRITICAL CLOUDFLARE CACHE/COMPRESSION BYPASS
             proxyHeaders.delete("Accept-Encoding");
-            proxyHeaders.set("Accept-Encoding", "identity"); 
+            
             proxyHeaders.delete("Sec-Fetch-Dest");
             proxyHeaders.delete("Sec-Fetch-Mode");
             proxyHeaders.delete("Sec-Fetch-Site");
@@ -969,7 +949,7 @@ export default {
             const cleanCookieStr = Object.entries(cookies).map(([k, v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
 
-            // ✅ Bypass Edge Cache completely for absolute accuracy 
+            // Stop edge cache from serving desktop view to mobile devices and vice versa
             const fetchConfig = { 
                 method: request.method, 
                 headers: proxyHeaders, 
@@ -982,9 +962,9 @@ export default {
             
             const contentType = proxyRes.headers.get("Content-Type") || "";
             const isHtml = contentType.toLowerCase().includes("text/html");
-            const isCss = contentType.toLowerCase().includes("text/css");
-            const isTextModifier = isHtml || isCss;
-            const responseHeaders = cleanHeaders(proxyRes, url.origin, isTextModifier);
+            
+            // ✅ Only pass true if it's HTML, leaving CSS/JS perfectly compressed!
+            const responseHeaders = cleanHeaders(proxyRes, url.origin, isHtml);
 
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) {
@@ -999,18 +979,7 @@ export default {
 
             let body = proxyRes.body;
             
-            // Rewrite CSS files directly to fix broken absolute CDN layouts
-            if (isCss) {
-                try {
-                    let cssText = await proxyRes.text();
-                    cssText = cssText.split(targetDomain).join(url.origin);
-                    const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
-                    cssText = cssText.split(schemaLessTarget).join('//' + url.host);
-                    body = cssText;
-                } catch(e) {}
-            }
-            
-            // 🚀 ONLY PROXY HTML. LEAVE JS UNTOUCHED SO THEY LOAD PERFECTLY!
+            // 🚀 ONLY PROXY HTML. LEAVE CSS & JS UNTOUCHED SO THEY LOAD PERFECTLY!
             if (isHtml) {
                 try {
                     let htmlText = await proxyRes.text();
@@ -1080,6 +1049,12 @@ export default {
         lockIdentity();
         let headObserver = new MutationObserver(lockIdentity);
         headObserver.observe(document.head, { subtree: true, childList: true, attributes: true, characterData: true });
+
+        // ✅ STOP TARGET SITES FROM BREAKING OUR CUSTOM DOMAINS (Prevents 403 on CDN)
+        let refMeta = document.createElement('meta');
+        refMeta.name = 'referrer';
+        refMeta.content = 'no-referrer';
+        document.head.appendChild(refMeta);
 
         if(!document.querySelector('meta[name="viewport"]')){
             let v = document.createElement('meta');
@@ -1188,7 +1163,7 @@ export default {
         window.nxCopyText = function(text, btn) {
             navigator.clipboard.writeText(text).then(() => {
                 let origHtml = btn.innerHTML;
-                btn.innerHTML = "<svg style='width:16px !important;height:16px !important;color:#10b981 !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'><polyline points='20 6 9 17 4 12'></polyline></svg>";
+                btn.innerHTML = "<svg style='width:16px !important;height:16px !important;color:#10b981 !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter' viewBox='0 0 24 24'><polyline points='20 6 9 17 4 12'></polyline></svg>";
                 setTimeout(() => { btn.innerHTML = origHtml; }, 1500);
             }).catch(()=>{});
         };
@@ -1199,6 +1174,11 @@ export default {
             // 'passive: false' is REQUIRED to prevent background scrolling during drag
             wrapper.addEventListener('mousedown', dragMouseDown, { passive: false });
             wrapper.addEventListener('touchstart', dragMouseDown, { passive: false });
+
+            // CRITICAL: Stop background scrolling when touching the widget
+            wrapper.addEventListener('touchmove', function(e) {
+                if(e.cancelable) e.preventDefault();
+            }, { passive: false });
 
             function dragMouseDown(e) {
                 // Allow inputs and buttons to be clicked inside the widget
@@ -1220,8 +1200,7 @@ export default {
             }
 
             function elementDrag(e) {
-                // ✅ PREVENT BACKGROUND SCROLLING (Crucial Fix!)
-                if(e.cancelable) e.preventDefault(); 
+                if(e.cancelable) e.preventDefault(); // Stop background scroll
                 
                 let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
@@ -1299,7 +1278,7 @@ export default {
                 <div class='nx-fw-field'>
                     <input type='text' class='nx-fw-val' value='\${au}' readonly>
                     <button class='nx-fw-copy' onclick='nxCopyText("\${au}", this)' title='Copy Username'>
-                        <svg style='width:14px !important;height:14px !important;color:inherit !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13' rx='2' ry='2'></rect><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'></path></svg>
+                        <svg style='width:14px !important;height:14px !important;color:inherit !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13'></rect><path d='M5 15H4V4h11v1'></path></svg>
                     </button>
                 </div>
                 
@@ -1307,7 +1286,7 @@ export default {
                 <div class='nx-fw-field' style='margin-bottom:0 !important;'>
                     <input type='password' class='nx-fw-val' value='\${ap}' readonly>
                     <button class='nx-fw-copy' onclick='nxCopyText("\${ap}", this)' title='Copy Password'>
-                        <svg style='width:14px !important;height:14px !important;color:inherit !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13' rx='2' ry='2'></rect><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'></path></svg>
+                        <svg style='width:14px !important;height:14px !important;color:inherit !important;display:block !important;' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter' viewBox='0 0 24 24'><rect x='9' y='9' width='13' height='13'></rect><path d='M5 15H4V4h11v1'></path></svg>
                     </button>
                 </div>
             \`;
