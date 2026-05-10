@@ -152,22 +152,17 @@ const landingPageHTML = `
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
 
-// ✅ CRITICAL BUG FIX: Accurate Header Parsing to Prevent Session/CSS Breaking
-const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
+// 🔥 THE MAGIC FIX: Strips Cloudflare specific encoding headers properly to fix broken CSS & Images!
+const cleanHeaders = (proxyRes, reqOrigin = null) => {
     const responseHeaders = new Headers();
     const removeHeaders =[
         'content-security-policy', 'content-security-policy-report-only', 
         'x-frame-options', 'strict-transport-security', 'x-content-type-options',
         'access-control-allow-origin', 'timing-allow-origin', 
-        'cross-origin-resource-policy', 'cross-origin-opener-policy'
+        'cross-origin-resource-policy', 'cross-origin-opener-policy',
+        'content-encoding', 'content-length', 'transfer-encoding' 
     ];
-    
-    // Only strip encoding headers if we parsed the HTML via .text()
-    if (isModified) {
-        removeHeaders.push('content-encoding', 'content-length', 'transfer-encoding');
-    }
 
-    // 🔥 CRITICAL FIX: Proper iteration ignoring Set-Cookie for custom handling
     for (const[key, value] of proxyRes.headers.entries()) {
         const kLower = key.toLowerCase();
         if (kLower !== 'set-cookie' && !removeHeaders.includes(kLower)) {
@@ -175,7 +170,7 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
         }
     }
     
-    // 🔥 ULTIMATE COOKIE FIX: Prevents Cloudflare from merging multiple cookies and breaking sessions/CSS
+    // 🔥 ULTIMATE COOKIE FIX: Prevents Cloudflare from merging multiple cookies
     if (proxyRes.headers.getSetCookie) {
         const setCookies = proxyRes.headers.getSetCookie();
         for (const cookie of setCookies) {
@@ -198,7 +193,6 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
         responseHeaders.set("Access-Control-Expose-Headers", "*"); 
     }
     
-    // Bypass Cloudflare cache completely so it never serves Desktop view to Mobile devices
     responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, s-maxage=0");
     return responseHeaders;
 };
@@ -303,7 +297,6 @@ export default {
             proxyHeaders.delete("X-Forwarded-For");
             proxyHeaders.delete("X-Forwarded-Proto");
             proxyHeaders.delete("X-Real-IP");
-            
             proxyHeaders.delete("Accept-Encoding"); 
             
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
@@ -320,26 +313,29 @@ export default {
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
                 const contentType = proxyRes.headers.get("Content-Type") || "";
-                const isTextModifier = contentType.toLowerCase().includes("text/html") || contentType.toLowerCase().includes("text/css");
-                const responseHeaders = cleanHeaders(proxyRes, reqOrigin, isTextModifier);
+                const responseHeaders = cleanHeaders(proxyRes, reqOrigin);
                 
                 let body = proxyRes.body;
                 
-                // 🔥 UPDATED CSS PARSING FOR CDN AND RELATIVE URLS 🔥
+                // 🔥 ENHANCED CSS CDN / EXTERNAL ASSET PARSING
                 if (contentType.toLowerCase().includes("text/css")) {
                     try {
                         let cssText = await proxyRes.text();
+                        let baseUrlForCss = targetUrlStr;
                         
-                        // 🔥 FIX: Rewrite relative URL & @import paths inside CDN CSS files
+                        cssText = cssText.replace(/url\(\s*(['"]?)(https?:\/\/[^'")]+)\1\s*\)/gi, (match, quote, path) => {
+                            if (path.includes(url.host)) return match;
+                            return `url(${quote}/__api_proxy?target=${encodeURIComponent(path)}${quote})`;
+                        });
                         cssText = cssText.replace(/url\(\s*(['"]?)(?!data:)(?!http:)(?!https:)([^'")]+)\1\s*\)/gi, (match, quote, path) => {
                             try {
-                                let absoluteUrl = new URL(path.trim(), targetUrlStr).toString();
+                                let absoluteUrl = new URL(path.trim(), baseUrlForCss).toString();
                                 return `url(${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote})`;
                             } catch(e) { return match; }
                         });
                         cssText = cssText.replace(/@import\s+(['"])(?!data:)(?!http:)(?!https:)([^'"]+)\1/gi, (match, quote, path) => {
                             try {
-                                let absoluteUrl = new URL(path.trim(), targetUrlStr).toString();
+                                let absoluteUrl = new URL(path.trim(), baseUrlForCss).toString();
                                 return `@import ${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote}`;
                             } catch(e) { return match; }
                         });
@@ -1015,8 +1011,7 @@ export default {
             const contentType = proxyRes.headers.get("Content-Type") || "";
             const isHtml = contentType.toLowerCase().includes("text/html");
             const isCss = contentType.toLowerCase().includes("text/css");
-            const isTextModifier = isHtml || isCss;
-            const responseHeaders = cleanHeaders(proxyRes, url.origin, isTextModifier);
+            const responseHeaders = cleanHeaders(proxyRes, url.origin);
 
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) {
@@ -1035,17 +1030,21 @@ export default {
             if (isCss) {
                 try {
                     let cssText = await proxyRes.text();
+                    let baseUrlForCss = targetUrl.toString();
                     
-                    // 🔥 FIX: Rewrite relative URL & @import paths inside CDN CSS files
+                    cssText = cssText.replace(/url\(\s*(['"]?)(https?:\/\/[^'")]+)\1\s*\)/gi, (match, quote, path) => {
+                        if (path.includes(url.host)) return match;
+                        return `url(${quote}/__api_proxy?target=${encodeURIComponent(path)}${quote})`;
+                    });
                     cssText = cssText.replace(/url\(\s*(['"]?)(?!data:)(?!http:)(?!https:)([^'")]+)\1\s*\)/gi, (match, quote, path) => {
                         try {
-                            let absoluteUrl = new URL(path.trim(), targetDomain).toString();
+                            let absoluteUrl = new URL(path.trim(), baseUrlForCss).toString();
                             return `url(${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote})`;
                         } catch(e) { return match; }
                     });
                     cssText = cssText.replace(/@import\s+(['"])(?!data:)(?!http:)(?!https:)([^'"]+)\1/gi, (match, quote, path) => {
                         try {
-                            let absoluteUrl = new URL(path.trim(), targetDomain).toString();
+                            let absoluteUrl = new URL(path.trim(), baseUrlForCss).toString();
                             return `@import ${quote}/__api_proxy?target=${encodeURIComponent(absoluteUrl)}${quote}`;
                         } catch(e) { return match; }
                     });
@@ -1068,18 +1067,24 @@ export default {
                     htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
 
                     // ✅ FIX INTEGRITY & CROSSORIGIN BLOCKING (Strict bypass)
-                    htmlText = htmlText.replace(/integrity(=["'][^"']*["'])?/gi, '');
-                    htmlText = htmlText.replace(/crossorigin(=["'][^"']*["'])?/gi, '');
+                    htmlText = htmlText.replace(/\bintegrity\s*=\s*["'][^"']*["']/gi, '');
+                    htmlText = htmlText.replace(/\bcrossorigin\s*=\s*["'][^"']*["']/gi, '');
                     htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']\s*\/?>/gi, '');
 
-                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS)
-                    htmlText = htmlText.replace(/(href|src)=["'](https?:\/\/[^"']+)["']/gi, (match, p1, p2) => {
-                        if (p2.startsWith(targetDomain) || p2.startsWith(url.origin) || p2.includes(url.host) || p2.startsWith('http://www.w3.org')) return match;
-                        return `${p1}="/__api_proxy?target=${encodeURIComponent(p2)}"`;
+                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS & Dynamic Images)
+                    htmlText = htmlText.replace(/\b(href|src|data-src|srcset|poster)\s*=\s*(["'])(https?:\/\/[^"']+)\2/gi, (match, attr, quote, path) => {
+                        if (path.startsWith(targetDomain) || path.startsWith(url.origin) || path.includes(url.host) || path.startsWith('http://www.w3.org')) return match;
+                        return `${attr}=${quote}/__api_proxy?target=${encodeURIComponent(path)}${quote}`;
                     });
                     
-                    htmlText = htmlText.replace(/(href|src)=["'](\/\/[^"']+)["']/gi, (match, p1, p2) => {
-                        return `${p1}="/__api_proxy?target=${encodeURIComponent('https:' + p2)}"`;
+                    htmlText = htmlText.replace(/\b(href|src|data-src|srcset|poster)\s*=\s*(["'])(\/\/[^"']+)\2/gi, (match, attr, quote, path) => {
+                        return `${attr}=${quote}/__api_proxy?target=${encodeURIComponent('https:' + path)}${quote}`;
+                    });
+
+                    // 🔥 INLINE CSS URL FIXES
+                    htmlText = htmlText.replace(/url\(\s*(['"]?)(https?:\/\/[^'")]+)\1\s*\)/gi, (match, quote, path) => {
+                        if (path.includes(url.host)) return match;
+                        return `url(${quote}/__api_proxy?target=${encodeURIComponent(path)}${quote})`;
                     });
                     
                     const encTargetTrim = encrypt(targetDomain).substring(0,8);
