@@ -1,3 +1,4 @@
+// ==========================================
 // ⚙️ SECURE FIREBASE CONFIGURATION
 // ==========================================
 const CONFIG = {
@@ -160,12 +161,11 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
         'cross-origin-resource-policy', 'cross-origin-opener-policy'
     ];
     
-    // Only strip encoding headers if we parsed the HTML via .text()
+    // Only strip encoding headers if we read the text and thus automatically decompressed it
     if (isModified) {
         removeHeaders.push('content-encoding', 'content-length', 'transfer-encoding');
     }
 
-    // Proper iteration ignoring Set-Cookie for custom handling
     for (const[key, value] of proxyRes.headers.entries()) {
         const kLower = key.toLowerCase();
         if (kLower !== 'set-cookie' && !removeHeaders.includes(kLower)) {
@@ -173,7 +173,7 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
         }
     }
     
-    // Process cookies safely
+    // Secure Cookie handling
     if (proxyRes.headers.getSetCookie) {
         const setCookies = proxyRes.headers.getSetCookie();
         for (const cookie of setCookies) {
@@ -196,6 +196,7 @@ const cleanHeaders = (proxyRes, reqOrigin = null, isModified = false) => {
         responseHeaders.set("Access-Control-Expose-Headers", "*"); 
     }
     
+    // Prevent any browser/CDN caching
     responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, s-maxage=0, no-transform");
     return responseHeaders;
 };
@@ -301,11 +302,8 @@ export default {
             proxyHeaders.delete("X-Forwarded-Proto");
             proxyHeaders.delete("X-Real-IP");
             
+            // 🔥 REMOVED Accept-Encoding override to let CF Native Fetch decompress correctly!
             proxyHeaders.delete("Accept-Encoding"); 
-            
-            // Ensure User-Agent matches exactly to prevent Desktop/Mobile switching
-            const reqUA = request.headers.get("User-Agent");
-            if(reqUA) proxyHeaders.set("User-Agent", reqUA);
             
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
@@ -980,7 +978,6 @@ export default {
             
             // ✅ STOP ALL CLOUDFLARE CACHING & SECURITY BLOCKING FOR FETCH REQUEST
             proxyHeaders.delete("Accept-Encoding");
-            proxyHeaders.set("Accept-Encoding", "identity"); 
             proxyHeaders.delete("Sec-Fetch-Dest");
             proxyHeaders.delete("Sec-Fetch-Mode");
             proxyHeaders.delete("Sec-Fetch-Site");
@@ -1010,10 +1007,19 @@ export default {
 
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) {
-                if(locationHeader.startsWith(targetDomain)) {
-                    responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
-                } else if (!locationHeader.startsWith('/')) {
-                    responseHeaders.set("Location", "/__api_proxy?target=" + encodeURIComponent(locationHeader));
+                try {
+                    const locUrl = new URL(locationHeader, targetDomain); 
+                    if (locUrl.hostname === tDomainObj.hostname) {
+                        responseHeaders.set("Location", locUrl.pathname + locUrl.search + locUrl.hash);
+                    } else {
+                        responseHeaders.set("Location", "/__api_proxy?target=" + encodeURIComponent(locUrl.toString()));
+                    }
+                } catch(e) {
+                    if(locationHeader.startsWith(targetDomain)) {
+                        responseHeaders.set("Location", locationHeader.replace(targetDomain, url.origin));
+                    } else if (!locationHeader.startsWith('/')) {
+                        responseHeaders.set("Location", "/__api_proxy?target=" + encodeURIComponent(locationHeader));
+                    }
                 }
             }
 
@@ -1021,7 +1027,6 @@ export default {
 
             let body = proxyRes.body;
             
-            // Rewrite CSS absolute paths to Proxy API
             if (isCss) {
                 try {
                     let cssText = await proxyRes.text();
@@ -1032,22 +1037,18 @@ export default {
                 } catch(e) {}
             }
             
-            // 🚀 ONLY PROXY HTML. LEAVE JS UNTOUCHED SO THEY LOAD PERFECTLY!
             if (isHtml) {
                 try {
                     let htmlText = await proxyRes.text();
                     
-                    // ✅ DOMAIN REPLACEMENTS
                     htmlText = htmlText.split(targetDomain).join(url.origin);
                     const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
                     htmlText = htmlText.split(schemaLessTarget).join('//' + url.host);
 
-                    // ✅ FIX INTEGRITY & CROSSORIGIN BLOCKING
                     htmlText = htmlText.replace(/integrity=["'][^"']*["']/gi, '');
                     htmlText = htmlText.replace(/crossorigin=["'][^"']*["']/gi, '');
                     htmlText = htmlText.replace(/<base\s+href=["'][^"']+["']\s*\/?>/gi, '');
 
-                    // ✅ ROUTE EXTERNAL ASSETS VIA PROXY (Bypass CORS)
                     htmlText = htmlText.replace(/(href|src)=["'](https?:\/\/[^"']+)["']/gi, (match, p1, p2) => {
                         if (p2.startsWith(targetDomain) || p2.startsWith(url.origin) || p2.includes(url.host) || p2.startsWith('http://www.w3.org')) return match;
                         return `${p1}="/__api_proxy?target=${encodeURIComponent(p2)}"`;
@@ -1225,6 +1226,10 @@ export default {
             
             wrapper.addEventListener('mousedown', dragMouseDown, { passive: false });
             wrapper.addEventListener('touchstart', dragMouseDown, { passive: false });
+
+            wrapper.addEventListener('touchmove', function(e) {
+                if(e.cancelable) e.preventDefault();
+            }, { passive: false });
 
             function dragMouseDown(e) {
                 if(e.target.tagName === 'INPUT' || e.target.closest('button')) return;
