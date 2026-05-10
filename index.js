@@ -152,18 +152,20 @@ const landingPageHTML = `
 // 🚀 BACKEND & CORE LOGIC
 // ==========================================
 
-// ✅ ULTIMATE FIX FOR CUSTOM DOMAIN CSS/JS ISSUES:
-// This strips out all compression headers so Cloudflare doesn't double-compress 
-// and break the files on strict custom domains.
-const cleanHeaders = (proxyRes, reqOrigin = null) => {
+// ✅ CRITICAL FIX: The ultimate header cleaner for CSS/JS compression & Cache issues
+const cleanHeaders = (proxyRes, reqOrigin = null, isTextModifier = false) => {
     const responseHeaders = new Headers();
     const removeHeaders =[
         'content-security-policy', 'content-security-policy-report-only', 
         'x-frame-options', 'strict-transport-security', 'x-content-type-options',
         'access-control-allow-origin', 'timing-allow-origin', 
-        'cross-origin-resource-policy', 'cross-origin-opener-policy',
-        'content-encoding', 'content-length', 'transfer-encoding' // MUST BE REMOVED FOR ALL FILES!
+        'cross-origin-resource-policy', 'cross-origin-opener-policy'
     ];
+    
+    // Only strip encoding headers if we are modifying HTML or CSS
+    if (isTextModifier) {
+        removeHeaders.push('content-encoding', 'content-length', 'transfer-encoding');
+    }
 
     for (const[key, value] of proxyRes.headers.entries()) {
         const kLower = key.toLowerCase();
@@ -181,8 +183,9 @@ const cleanHeaders = (proxyRes, reqOrigin = null) => {
         responseHeaders.set("Access-Control-Allow-Credentials", "true");
         responseHeaders.set("Access-Control-Expose-Headers", "*"); 
     }
-    // Prevent Cloudflare Auto Minify / Rocket Loader from destroying injected scripts
-    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, no-transform");
+    
+    // ✅ CRITICAL FOR DOMAINS: Bypass Browser and Cloudflare Caching completely!
+    responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, s-maxage=0, no-transform");
     return responseHeaders;
 };
 
@@ -280,19 +283,47 @@ export default {
             proxyHeaders.delete("Sec-Fetch-Site");
             proxyHeaders.delete("Sec-Fetch-User");
             
+            // Explicitly request uncompressed to prevent CF issues
             proxyHeaders.delete("Accept-Encoding");
             proxyHeaders.set("Accept-Encoding", "identity"); 
             
             const cleanCookieStr = Object.entries(cookies).filter(([k]) => k !== 'portal_session' && k !== 'proxy_active' && k !== 'admin_session').map(([k,v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
 
-            const fetchConfig = { method: request.method, headers: proxyHeaders, redirect: "manual" };
+            // ✅ Bypass CF Edge Cache for Proxy Requests
+            const fetchConfig = { 
+                method: request.method, 
+                headers: proxyHeaders, 
+                redirect: "manual",
+                cf: { cacheTtl: 0, cacheEverything: false } 
+            };
             if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) fetchConfig.body = request.body;
 
             try {
                 const proxyRes = await fetch(targetUrlStr, fetchConfig);
-                const responseHeaders = cleanHeaders(proxyRes, reqOrigin);
-                return new Response(proxyRes.body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
+                const contentType = proxyRes.headers.get("Content-Type") || "";
+                const isTextModifier = contentType.toLowerCase().includes("text/html") || contentType.toLowerCase().includes("text/css");
+                const responseHeaders = cleanHeaders(proxyRes, reqOrigin, isTextModifier);
+                
+                let body = proxyRes.body;
+                
+                // Rewrite CSS files even via API Proxy so absolute CDNs don't break layouts
+                if (contentType.toLowerCase().includes("text/css")) {
+                    try {
+                        let cssText = await proxyRes.text();
+                        if (isProxyActive) {
+                            let pData = JSON.parse(decrypt(isProxyActive));
+                            if (pData.t) {
+                                cssText = cssText.split(pData.t).join(url.origin);
+                                const schemaLessTarget = pData.t.replace(/^https?:\/\//, '//');
+                                cssText = cssText.split(schemaLessTarget).join('//' + url.host);
+                            }
+                        }
+                        body = cssText;
+                    } catch(e) {}
+                }
+                
+                return new Response(body, { status: proxyRes.status, statusText: proxyRes.statusText, headers: responseHeaders });
             } catch(e) {
                 return new Response("API Proxy Error", { status: 500 });
             }
@@ -337,7 +368,7 @@ export default {
             const { siteId, accIdx, newPassword } = await request.json();
             
             let confs = db.pins[userPin].siteConf[siteId];
-            if (!Array.isArray(confs)) confs =[confs]; 
+            if (!Array.isArray(confs)) confs = [confs]; 
             
             if (confs[accIdx]) {
                 confs[accIdx].p = newPassword;
@@ -689,7 +720,7 @@ export default {
                                     <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[70px]">Username</span>
                                     <input type="text" readonly value="${conf.u}" class="flex-grow bg-transparent text-[11px] text-white px-2 outline-none min-w-0 truncate select-all font-mono">
                                     <button onclick="copyLink('${conf.u}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Username">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                     </button>
                                 </div>
                                 
@@ -701,7 +732,7 @@ export default {
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </button>
                                         <button onclick="copyLink(document.getElementById('pwd-disp-${siteId}-${idx}').value, this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Pwd">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                         </button>
                                         <button onclick="toggleEditPwd('${siteId}-${idx}')" class="w-7 h-7 flex items-center justify-center bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black transition-all rounded-none border border-yellow-500/30" title="Update">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -745,7 +776,7 @@ export default {
                             <div class="bg-white/5 border border-white/10 flex items-center p-1.5 w-full rounded-none mb-2">
                                 <span class="text-[8px] font-bold text-gray-500 uppercase px-2 whitespace-nowrap w-[60px]">Portal</span>
                                 <input type="text" readonly value="${site.userLink}" class="flex-grow bg-transparent text-[11px] text-blue-400 px-2 outline-none min-w-0 truncate select-all">
-                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4V4h11v1"></path></svg></button>
+                                <button onclick="copyLink('${site.userLink}', this)" class="w-7 h-7 flex items-center justify-center bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all flex-shrink-0 rounded-none border border-indigo-500/30" title="Copy Link"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
                             </div>
                             
                             <div class="space-y-4">
@@ -815,7 +846,7 @@ export default {
                         if(!text) return;
                         navigator.clipboard.writeText(text);
                         const old = btn.innerHTML;
-                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                        btn.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                         setTimeout(() => btn.innerHTML = old, 1500);
                     }
                     
@@ -938,14 +969,22 @@ export default {
             const cleanCookieStr = Object.entries(cookies).map(([k, v]) => `${k}=${v}`).join('; ');
             if (cleanCookieStr) proxyHeaders.set("Cookie", cleanCookieStr); else proxyHeaders.delete("Cookie");
 
-            const fetchConfig = { method: request.method, headers: proxyHeaders, redirect: "manual" };
+            // ✅ Bypass Edge Cache completely for absolute accuracy 
+            const fetchConfig = { 
+                method: request.method, 
+                headers: proxyHeaders, 
+                redirect: "manual",
+                cf: { cacheTtl: 0, cacheEverything: false } 
+            };
             if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) fetchConfig.body = request.body;
 
             const proxyRes = await fetch(targetUrl.toString(), fetchConfig);
             
             const contentType = proxyRes.headers.get("Content-Type") || "";
             const isHtml = contentType.toLowerCase().includes("text/html");
-            const responseHeaders = cleanHeaders(proxyRes, url.origin, isHtml);
+            const isCss = contentType.toLowerCase().includes("text/css");
+            const isTextModifier = isHtml || isCss;
+            const responseHeaders = cleanHeaders(proxyRes, url.origin, isTextModifier);
 
             const locationHeader = responseHeaders.get("Location");
             if (locationHeader) {
@@ -960,7 +999,18 @@ export default {
 
             let body = proxyRes.body;
             
-            // 🚀 ONLY PROXY HTML. LEAVE CSS & JS UNTOUCHED SO THEY LOAD PERFECTLY!
+            // Rewrite CSS files directly to fix broken absolute CDN layouts
+            if (isCss) {
+                try {
+                    let cssText = await proxyRes.text();
+                    cssText = cssText.split(targetDomain).join(url.origin);
+                    const schemaLessTarget = targetDomain.replace(/^https?:\/\//, '//');
+                    cssText = cssText.split(schemaLessTarget).join('//' + url.host);
+                    body = cssText;
+                } catch(e) {}
+            }
+            
+            // 🚀 ONLY PROXY HTML. LEAVE JS UNTOUCHED SO THEY LOAD PERFECTLY!
             if (isHtml) {
                 try {
                     let htmlText = await proxyRes.text();
@@ -1145,15 +1195,16 @@ export default {
 
         function makeDraggable(wrapper) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            wrapper.onmousedown = dragMouseDown;
-            wrapper.ontouchstart = dragMouseDown;
+            
+            // 'passive: false' is REQUIRED to prevent background scrolling during drag
+            wrapper.addEventListener('mousedown', dragMouseDown, { passive: false });
+            wrapper.addEventListener('touchstart', dragMouseDown, { passive: false });
 
             function dragMouseDown(e) {
-                // Ignore clicks on inputs, buttons, or close icon to allow interaction
+                // Allow inputs and buttons to be clicked inside the widget
                 if(e.target.tagName === 'INPUT' || e.target.closest('button')) return;
                 
-                e = e || window.event;
-                if (e.type === 'touchstart') {
+                if(e.type === 'touchstart') {
                     pos3 = e.touches[0].clientX;
                     pos4 = e.touches[0].clientY;
                 } else {
@@ -1161,14 +1212,17 @@ export default {
                     pos3 = e.clientX;
                     pos4 = e.clientY;
                 }
-                document.onmouseup = closeDragElement;
-                document.ontouchend = closeDragElement;
-                document.onmousemove = elementDrag;
-                document.ontouchmove = elementDrag;
+                
+                document.addEventListener('mouseup', closeDragElement);
+                document.addEventListener('touchend', closeDragElement);
+                document.addEventListener('mousemove', elementDrag, { passive: false });
+                document.addEventListener('touchmove', elementDrag, { passive: false });
             }
 
             function elementDrag(e) {
-                e = e || window.event;
+                // ✅ PREVENT BACKGROUND SCROLLING (Crucial Fix!)
+                if(e.cancelable) e.preventDefault(); 
+                
                 let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
                 let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
                 
@@ -1180,7 +1234,7 @@ export default {
                 let newTop = wrapper.offsetTop - pos2;
                 let newLeft = wrapper.offsetLeft - pos1;
                 
-                // Prevent dragging outside the screen
+                // Keep inside screen bounds
                 if (newTop < 0) newTop = 0;
                 if (newLeft < 0) newLeft = 0;
                 if (newTop + wrapper.offsetHeight > window.innerHeight) newTop = window.innerHeight - wrapper.offsetHeight;
@@ -1193,10 +1247,10 @@ export default {
             }
 
             function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-                document.ontouchend = null;
-                document.ontouchmove = null;
+                document.removeEventListener('mouseup', closeDragElement);
+                document.removeEventListener('touchend', closeDragElement);
+                document.removeEventListener('mousemove', elementDrag);
+                document.removeEventListener('touchmove', elementDrag);
             }
         }
 
@@ -1208,11 +1262,12 @@ export default {
 
             let wrapper = document.createElement('div');
             wrapper.id = 'nx-float-widget-wrapper';
-            wrapper.style.cssText = 'position:fixed !important; bottom:20px !important; right:20px !important; z-index:2147483647 !important; transition: opacity 0.3s ease !important; cursor: move !important;';
+            // ✅ 'touch-action: none' strictly stops browser native gesture scroll inside the widget
+            wrapper.style.cssText = 'position:fixed !important; bottom:20px !important; right:20px !important; z-index:2147483647 !important; transition: opacity 0.3s ease !important; cursor: move !important; touch-action: none !important;';
 
             let style = document.createElement('style');
             style.innerHTML = \`
-                #nx-float-widget { width:310px !important; background:#0f172a !important; border:2px solid #059669 !important; border-radius:0px !important; box-shadow:0 15px 35px rgba(0,0,0,0.8) !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; padding:22px !important; color:#f3f4f6 !important; box-sizing:border-box !important; }
+                #nx-float-widget { width:310px !important; background:#0f172a !important; border:2px solid #059669 !important; border-radius:0px !important; box-shadow:0 15px 35px rgba(0,0,0,0.8) !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; padding:20px !important; color:#f3f4f6 !important; box-sizing:border-box !important; }
                 #nx-float-widget * { box-sizing:border-box !important; margin:0 !important; padding:0 !important; line-height:normal !important; letter-spacing:normal !important; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; text-transform:none !important; }
                 .nx-fw-header { display:flex !important; justify-content:space-between !important; align-items:center !important; margin-bottom:12px !important; }
                 .nx-fw-title { font-size:15px !important; font-weight:bold !important; color:#10b981 !important; display:flex !important; align-items:center !important; gap:8px !important; pointer-events:none !important; }
@@ -1261,7 +1316,7 @@ export default {
             wrapper.appendChild(widget);
             document.documentElement.appendChild(wrapper);
 
-            // Make the entire widget draggable
+            // Make the entire widget draggable without scrolling the background
             makeDraggable(wrapper);
 
             // 3 Seconds timeout for Close button
